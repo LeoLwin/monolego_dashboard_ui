@@ -1,25 +1,47 @@
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../AuthContext";
 
 const Login = () => {
+  const { login } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  // const navigate = useNavigate();
-  const login = async () => {
+  const [showError, setShowError] = useState("");
+
+  const navigate = useNavigate();
+  const loginToggle = async () => {
+    if (!email.endsWith("@gmail.com")) {
+      setShowError("Please use a Gmail address.");
+      return;
+    }
+    if (!email || !password) {
+      setShowError("Plase type email and password.");
+      return;
+    }
+
     try {
       // Get the server domain from environment variable
       const serverDomain = import.meta.env.VITE_SERVER_DOMAIN;
-      console.log("Server Domain: ", serverDomain);
+      // console.log("Server Domain: ", serverDomain);
 
       // Make the API request
       const result = await axios.post(`${serverDomain}/lego/auth/login`, {
         email,
         password,
       });
+      // console.log("Code : ", result);
+      if (result.data.code === "200") {
+        // console.log("yes");
+        login(result.data.data);
+      } else {
+        // console.log("No");
+        await setShowError(result.data.message);
+        console.log("Error message: ", result.data.message);
+      }
+      // console.log("Login Result: ", result.data);
 
-      console.log("Login Result: ", result);
-      // navigate("/dashboard");
+      navigate("/dashboard");
     } catch (error) {
       console.log("Error: ", error);
     }
@@ -28,12 +50,20 @@ const Login = () => {
   const handleCancel = () => {
     setEmail("");
     setPassword("");
+    setShowError("");
   };
+
+  useEffect(() => {
+    setTimeout(() => {
+      setShowError("");
+    }, 5000);
+  }, [showError]);
+
   return (
     <>
       <div className="flex items-center justify-center min-h-screen">
-        <div className="flex flex-col m-5 justify-center items-center w-96 h-80 gap-10 border-2 rounded border-black shrink">
-          <h1>Welcome</h1>
+        <div className="flex flex-col m-5 justify-center items-center w-96 h-80 justify-around border-2 rounded border-black shrink">
+          <h1 className="text-3xl font-semibold tracking-widest">Welcome</h1>
           <input
             type="text"
             name="email"
@@ -50,10 +80,11 @@ const Login = () => {
             placeholder="Type your password!"
             className="mb-4 w-80 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
-          <div className="flex gap-10">
+          <p className="text-red-500 font-medium">{showError}</p>
+          <div className="flex gap-10 mb-5 w-full shrink justify-center">
             <button
               type="submit"
-              onClick={login}
+              onClick={loginToggle}
               className="px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300"
             >
               Login

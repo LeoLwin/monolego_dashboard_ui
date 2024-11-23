@@ -1,9 +1,8 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./AuthContext";
 import ProtectedRoute from "./ProtectedRoute";
+import Login from "./components/login/Login";
 
-
-import Login from "./components/login/login";
 import Dashboard from "./components/dashboard/Dashboard";
 AuthProvider;
 

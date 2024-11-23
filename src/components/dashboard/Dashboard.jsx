@@ -1,12 +1,16 @@
 import { useState } from "react";
-import Menubar from "./Menubar";
+import Menubar from "./MenuBar";
 import Product from "./Product";
 
 const Dashboard = () => {
   const [isSidebarVisible, setIsSidebarVisible] = useState(false);
+  const [showProduct, setShowProduct] = useState(false);
 
   const toggleSidebar = () => {
     setIsSidebarVisible(!isSidebarVisible);
+  };
+  const handleProductToggle = () => {
+    setShowProduct(!showProduct); // Toggle Product visibility
   };
 
   return (
@@ -25,7 +29,10 @@ const Dashboard = () => {
             {/* Sidebar content */}
 
             <div className="">
-              <Menubar onMenuClick={toggleSidebar} />
+              <Menubar
+                onMenuClick={toggleSidebar}
+                onProductClick={handleProductToggle}
+              />
             </div>
           </div>
 
@@ -65,7 +72,7 @@ const Dashboard = () => {
 
             <div className="p-3 w-full h-full">
               {/* <div>Main content goes here</div> */}
-              <Product />
+              {showProduct && <Product />}
             </div>
           </div>
         </div>

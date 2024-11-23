@@ -7,7 +7,7 @@ export const data = [
     color: "Green",
     initial_stock: 500,
     created_at: "2024/11/21",
-    updated_at: "2024/11/21",
+    updated_at: "2024/11/21 12:12:01",
   },
   {
     id: 33,

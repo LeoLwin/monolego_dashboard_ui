@@ -32,7 +32,9 @@ const Table = ({ columns, data, rowsPerPage = 5, onActionClick }) => {
                 {column.Header}
               </th>
             ))}
-            <th className="px-2 sm:px-4 py-2 border-b text-left border-slate-400">Actions</th>
+            <th className="px-2 sm:px-4 py-2 border-b text-left border-slate-400">
+              Actions
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -65,7 +67,7 @@ const Table = ({ columns, data, rowsPerPage = 5, onActionClick }) => {
         </tbody>
       </table>
 
-      <div className="mt-4 flex flex-col sm:flex-row justify-center items-center space-y-2 sm:space-y-0 sm:space-x-2">
+      <div className="mt-4 flex flex-col justify-center items-center space-y-2 sm:space-y-0 sm:space-x-2">
         <button
           onClick={() => handlePageChange(currentPage - 1)}
           disabled={currentPage === 1}

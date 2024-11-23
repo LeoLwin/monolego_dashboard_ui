@@ -29,7 +29,7 @@ const Product = () => {
         <h3 className="text-xl sm:text-3xl md:text2xl font-extrabold shrink tracking-wide">
           {showAdd ? "ADD PRODUCT" : "PRODUCT LIST"}
         </h3>
-        <div className="flex justify-end w-full ">
+        <div className="flex justify-end w-full mb-1 ">
           <div className="lg:px-10 sm:justify-end md:justify-end">
             <div
               className="text-3xl font-extrabold border-2 border-slate-500 rounded w-12 text-center shrink  justify-center 

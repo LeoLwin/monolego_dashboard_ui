@@ -67,7 +67,7 @@ const Table = ({ columns, data, rowsPerPage = 5, onActionClick }) => {
         </tbody>
       </table>
 
-      <div className="mt-4 flex flex-col justify-center items-center space-y-2 sm:space-y-0 sm:space-x-2">
+      <div className="mt-4 flex flex-row justify-center items-center space-y-2 sm:space-y-0 sm:space-x-2 shrink">
         <button
           onClick={() => handlePageChange(currentPage - 1)}
           disabled={currentPage === 1}

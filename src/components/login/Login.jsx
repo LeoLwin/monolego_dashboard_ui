@@ -10,40 +10,41 @@ const Login = () => {
   const [showError, setShowError] = useState("");
 
   const navigate = useNavigate();
+
   const loginToggle = async () => {
     if (!email.endsWith("@gmail.com")) {
       setShowError("Please use a Gmail address.");
       return;
     }
     if (!email || !password) {
-      setShowError("Plase type email and password.");
+      setShowError("Please type email and password.");
       return;
     }
 
     try {
-      // Get the server domain from environment variable
       const serverDomain = import.meta.env.VITE_SERVER_DOMAIN;
-      // console.log("Server Domain: ", serverDomain);
 
-      // Make the API request
       const result = await axios.post(`${serverDomain}/lego/auth/login`, {
         email,
         password,
       });
-      // console.log("Code : ", result);
+
       if (result.data.code === "200") {
-        // console.log("yes");
         login(result.data.data);
+        navigate("/dashboard");
       } else {
-        // console.log("No");
-        await setShowError(result.data.message);
+        setShowError(result.data.message || "Login failed. Please try again.");
         console.log("Error message: ", result.data.message);
       }
-      // console.log("Login Result: ", result.data);
-
-      navigate("/dashboard");
     } catch (error) {
+      setShowError("An error occurred while logging in. Please try again.");
       console.log("Error: ", error);
+    }
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      loginToggle();
     }
   };
 
@@ -54,9 +55,11 @@ const Login = () => {
   };
 
   useEffect(() => {
-    setTimeout(() => {
+    const timer = setTimeout(() => {
       setShowError("");
     }, 5000);
+
+    return () => clearTimeout(timer);
   }, [showError]);
 
   return (
@@ -67,7 +70,7 @@ const Login = () => {
           <input
             type="text"
             name="email"
-            placeholder="exampl@email.com"
+            placeholder="example@email.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className="mb-4 w-80 px-4 py-2 border-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -77,6 +80,7 @@ const Login = () => {
             name="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            onKeyDown={handleKeyDown}
             placeholder="Type your password!"
             className="mb-4 w-80 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />

@@ -1,23 +1,47 @@
-import { useState } from "react";
+/* eslint-disable react/prop-types */
+import { useState, useEffect } from "react";
 
-// eslint-disable-next-line react/prop-types
-const Table = ({ columns, data, rowsPerPage = 5, onActionClick }) => {
-  const [currentPage, setCurrentPage] = useState(1);
+const Table = ({
+  columns,
+  data,
+  rowsPerPage = 5, // Default rows per page
+  initialPage = 1, // Initial page (default to 1)
+  onActionClick,
+  onPageChange, // Callback for external page change handling
+}) => {
+  const [currentPage, setCurrentPage] = useState(initialPage);
+  const [pageLimit, setPageLimit] = useState(rowsPerPage);
 
   // Calculate the start and end index for slicing the data
-  const indexOfLastRow = currentPage * rowsPerPage;
-  const indexOfFirstRow = indexOfLastRow - rowsPerPage;
+  const indexOfLastRow = currentPage * pageLimit;
+  console.log("indexOfLastRow : ", indexOfLastRow);
+  const indexOfFirstRow = indexOfLastRow - pageLimit;
+  console.log("indexOfFirstRow : ", indexOfFirstRow);
   const currentRows = data.slice(indexOfFirstRow, indexOfLastRow);
+  console.log("currentRows", currentRows);
 
   // Calculate total pages
-  const totalPages = Math.ceil(data.length / rowsPerPage);
+  const totalPages = Math.ceil(data.length / pageLimit);
+  console.log("totalPages : ", totalPages);
 
   // Handle page change
   const handlePageChange = (page) => {
     if (page >= 1 && page <= totalPages) {
       setCurrentPage(page);
+      if (onPageChange) {
+        onPageChange(page); // Notify parent about the page change
+      }
     }
   };
+
+  // Update page limit dynamically
+  useEffect(() => {
+    setPageLimit(rowsPerPage);
+  }, [rowsPerPage]);
+
+  useEffect(() => {
+    setCurrentPage(initialPage);
+  }, [initialPage]);
 
   return (
     <div className="overflow-x-auto w-full max-w-full">

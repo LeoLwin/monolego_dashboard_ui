@@ -1,15 +1,22 @@
 // import { data } from "../../hello";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { data } from "../../data";
 import Table from "../../Table";
 import AddProduct from "./AddProduct";
 
 const Product = () => {
   const [showAdd, setShowAdd] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1); // Current page
+  const [rowsPerPage] = useState(10); // Rows per page
 
   const handleShowProductToggle = () => {
     setShowAdd(!showAdd); // Toggle Product visibility
+  };
+
+  const handlePageChange = (page) => {
+    console.log("Page : ", page);
+    setCurrentPage(page); // Update current page when Table notifies
   };
 
   const columns = [
@@ -22,6 +29,8 @@ const Product = () => {
     { Header: "Created_at", accessor: "created_at" },
     { Header: "Updated_at", accessor: "updated_at" },
   ];
+
+  useEffect(() => {}, []);
 
   return (
     <>
@@ -48,7 +57,13 @@ const Product = () => {
         {showAdd ? (
           <AddProduct />
         ) : (
-          <Table columns={columns} data={data} rowsPerPage={10} />
+          <Table
+            columns={columns}
+            data={data}
+            rowsPerPage={rowsPerPage}
+            initialPage={currentPage}
+            onPageChange={handlePageChange} // Notify parent on page change
+          />
         )}
       </div>
     </>

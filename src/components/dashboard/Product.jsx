@@ -1,16 +1,22 @@
 // import { data } from "../../hello";
 
 import { useEffect, useState } from "react";
-import { data } from "../../data";
+// import { data } from "../../data";
 import Table from "../../Table";
 import AddProduct from "./AddProduct";
+import axios from "axios";
+import { useAuth } from "../../AuthContext";
 
 const Product = () => {
+  const { accessToken } = useAuth();
   const [showAdd, setShowAdd] = useState(false);
   const [currentPage, setCurrentPage] = useState(1); // Current page
   const [rowsPerPage] = useState(10); // Rows per page
+  const [data, setData] = useState([]);
 
   const handleShowProductToggle = () => {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+
     setShowAdd(!showAdd); // Toggle Product visibility
   };
 
@@ -30,7 +36,32 @@ const Product = () => {
     { Header: "Updated_at", accessor: "updated_at" },
   ];
 
-  useEffect(() => {}, []);
+  const fetchData = async (page = currentPage, limit = rowsPerPage) => {
+    try {
+      console.log("Page : ", page, "And Limit : ", limit);
+      const serverDomain = import.meta.env.VITE_SERVER_DOMAIN;
+      const result = await axios.post(
+        `${serverDomain}/lego/stock/list`,
+        {
+          current: page,
+          limit,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`, // Use the token in the request headers
+          },
+        }
+      );
+      console.log("Result :", result.data.data);
+      setData(result.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchData(currentPage, rowsPerPage);
+  }, [currentPage, rowsPerPage]);
 
   return (
     <>

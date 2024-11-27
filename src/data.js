@@ -109,7 +109,7 @@ export const data = [
     created_at: "2024/11/21",
     updated_at: "2024/11/21",
   },
-  
+
   {
     id: 43,
     sku: "TSHIRT003",

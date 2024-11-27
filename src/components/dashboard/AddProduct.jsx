@@ -221,7 +221,7 @@ const AddProduct = ({ data, editAble }) => {
           <p
             className={`${
               code == "green" ? "text-green-500" : "text-red-500"
-            } font-medium`}
+            } font-medium border rounded-md`}
           >
             {showError}
           </p>

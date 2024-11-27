@@ -13,10 +13,17 @@ const Product = () => {
   const [currentPage, setCurrentPage] = useState(1); // Current page
   const [rowsPerPage] = useState(10); // Rows per page
   const [data, setData] = useState([]);
+  // eslint-disable-next-line no-unused-vars
+  const [codeStatus, setCodeStatus] = useState("");
+  const [showError, setShowError] = useState("");
+  const [isError, setIsError] = useState(false);
+  const [editData, setEditData] = useState(null);
+  const [editAble, setEditAble] = useState(false);
 
   const handleShowProductToggle = () => {
     // eslint-disable-next-line react-hooks/rules-of-hooks
-
+    setEditData(null);
+    setEditAble(false);
     setShowAdd(!showAdd); // Toggle Product visibility
   };
 
@@ -44,7 +51,7 @@ const Product = () => {
         `${serverDomain}/lego/stock/list`,
         {
           current: page,
-          limit, 
+          limit,
         },
         {
           headers: {
@@ -59,9 +66,72 @@ const Product = () => {
     }
   };
 
+  const productDelete = async (id) => {
+    try {
+      const serverDomain = import.meta.env.VITE_SERVER_DOMAIN;
+      const result = await axios.delete(
+        `${serverDomain}/lego/stock/delete/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`, // Use the token in the request headers
+          },
+        }
+      );
+      if (result.data.code == "200") {
+        setCodeStatus("green");
+      } else {
+        setIsError(true);
+        setCodeStatus("red");
+      }
+      setShowError(result.data.message);
+      console.log("Result :", result.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const productEdit = async (data) => {
+    console.log("ProductEdit data  : ", data);
+    setEditData(data);
+    setShowAdd(true);
+    setEditAble(true);
+  };
+
+  const onActionClick = async (row, actionType) => {
+    try {
+      console.log("Data : ", row);
+      console.log("ActionType : ", actionType);
+      if (actionType == "delete") {
+        await productDelete(row.id);
+      } else if (actionType == "edit") {
+        productEdit(row);
+        // await productDelete(row.id);
+      }
+      // console.log("data : ", data.id);
+      // const serverDomain = import.meta.env.VITE_SERVER_DOMAIN;
+      // const result = await axios.delete(
+      //   `${serverDomain}/lego/stock/delete/${data.id}`,
+      //   {
+      //     headers: {
+      //       Authorization: `Bearer ${accessToken}`, // Use the token in the request headers
+      //     },
+      //   }
+      // );
+      // console.log("Result :", result.data.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     fetchData(currentPage, rowsPerPage);
-  }, [currentPage, rowsPerPage]);
+    const timer = setTimeout(() => {
+      setIsError(false);
+      setShowError("");
+    }, 5000);
+
+    return () => clearTimeout(timer);
+  }, [currentPage, rowsPerPage, isError]);
 
   return (
     <>
@@ -84,16 +154,25 @@ const Product = () => {
             </div>
           </div>
         </div>
-
+        <div className="flex justify-center items-center p-2">
+          <p
+            className={`${
+              isError == "block" ? "hide " : "text-red-500"
+            } font-medium`}
+          >
+            {showError}
+          </p>
+        </div>
         {showAdd ? (
-          <AddProduct />
+          <AddProduct data={editData} editAble={editAble} />
         ) : (
           <Table
             columns={columns}
             data={data}
             rowsPerPage={rowsPerPage}
             initialPage={currentPage}
-            onPageChange={handlePageChange} // Notify parent on page change
+            onPageChange={handlePageChange}
+            onActionClick={onActionClick} // Notify parent on page change
           />
         )}
       </div>

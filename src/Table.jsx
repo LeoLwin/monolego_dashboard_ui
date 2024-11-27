@@ -11,18 +11,20 @@ const Table = ({
 }) => {
   const [currentPage, setCurrentPage] = useState(initialPage);
   const [pageLimit, setPageLimit] = useState(rowsPerPage);
+  const [showConfirm, setShowConfirm] = useState(false); // State for showing confirmation modal
+  const [rowToDelete, setRowToDelete] = useState(null); // Store row to delete
 
   // Calculate the start and end index for slicing the data
   const indexOfLastRow = currentPage * pageLimit;
-  console.log("indexOfLastRow : ", indexOfLastRow);
+  // console.log("indexOfLastRow : ", indexOfLastRow);
   const indexOfFirstRow = indexOfLastRow - pageLimit;
-  console.log("indexOfFirstRow : ", indexOfFirstRow);
+  // console.log("indexOfFirstRow : ", indexOfFirstRow);
   const currentRows = data.slice(indexOfFirstRow, indexOfLastRow);
-  console.log("currentRows", currentRows);
+  // console.log("currentRows", currentRows);
 
   // Calculate total pages
   const totalPages = Math.ceil(data.length / pageLimit);
-  console.log("totalPages : ", totalPages);
+  // console.log("totalPages : ", totalPages);
 
   // Handle page change
   const handlePageChange = (page) => {
@@ -42,6 +44,15 @@ const Table = ({
   useEffect(() => {
     setCurrentPage(initialPage);
   }, [initialPage]);
+
+  // Handle delete confirmation
+  const handleDeleteConfirmation = (confirm) => {
+    if (confirm && rowToDelete) {
+      onActionClick(rowToDelete, "delete"); // Call the delete function if confirmed
+    }
+    setShowConfirm(false); // Close the confirmation dialog
+    setRowToDelete(null); // Clear the row to delete
+  };
 
   return (
     <div className="overflow-x-auto w-full max-w-full">
@@ -80,7 +91,10 @@ const Table = ({
                   <i className="fa-solid fa-pen-to-square"></i>
                 </button>
                 <button
-                  onClick={() => onActionClick(row, "delete")}
+                  onClick={() => {
+                    setRowToDelete(row);
+                    setShowConfirm(true);
+                  }}
                   className="px-2 py-1 text-white bg-red-500 hover:bg-red-600 rounded text-xs sm:text-sm"
                 >
                   <i className="fa-solid fa-trash"></i>
@@ -108,6 +122,30 @@ const Table = ({
           Next
         </button>
       </div>
+
+      {showConfirm && (
+        <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center z-50 ">
+          <div className="bg-white p-6 rounded shadow-lg">
+            <h3 className="text-lg mb-4">
+              Are you sure you want to delete this item?
+            </h3>
+            <div className="flex justify-center items-center gap-10">
+              <button
+                onClick={() => handleDeleteConfirmation(true)}
+                className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+              >
+                Yes
+              </button>
+              <button
+                onClick={() => handleDeleteConfirmation(false)}
+                className="px-4 py-2 bg-gray-300 text-black rounded hover:bg-gray-400"
+              >
+                No
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

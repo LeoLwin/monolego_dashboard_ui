@@ -1,8 +1,9 @@
+/* eslint-disable react/prop-types */
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useAuth } from "../../AuthContext";
 
-const AddProduct = () => {
+const AddProduct = ({ data, editAble }) => {
   const { accessToken } = useAuth();
   const [productData, setProductData] = useState({
     sku: "",
@@ -13,7 +14,6 @@ const AddProduct = () => {
   });
   const [showError, setShowError] = useState("");
   const [code, setCode] = useState("");
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setProductData((prevData) => ({
@@ -39,35 +39,67 @@ const AddProduct = () => {
       }
 
       const serverDomain = import.meta.env.VITE_SERVER_DOMAIN;
-      const result = await axios.post(
-        `${serverDomain}/lego/stock/create`,
-        {
-          sku: productData.sku,
-          product_name: productData.product_name,
-          size: productData.size,
-          color: productData.color,
-          initial_stock: productData.initial_stock,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
+      let result;
+
+      if (editAble) {
+        result = await axios.put(
+          `${serverDomain}/lego/stock/update/${data.id}`,
+          {
+            sku: productData.sku,
+            product_name: productData.product_name,
+            size: productData.size,
+            color: productData.color,
+            initial_stock: productData.initial_stock,
           },
-        }
-      );
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
+      } else {
+        result = await axios.post(
+          `${serverDomain}/lego/stock/create`,
+          {
+            sku: productData.sku,
+            product_name: productData.product_name,
+            size: productData.size,
+            color: productData.color,
+            initial_stock: productData.initial_stock,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
+      }
+
       console.log("Result :", result.data);
       console.log("Result :", result.data.code);
       if (result.data.code == "200") {
         setCode("green");
+        handleCancel();
       } else {
         setCode("red");
       }
       setShowError(result.data.message);
-      // Proceed with saving stock
 
-      // Your API call or saving logic here
+      // editAble = false;
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const handleCancel = () => {
+    setProductData({
+      sku: "",
+      product_name: "",
+      size: "",
+      color: "",
+      initial_stock: 0, // Reset all fields to their default values
+    });
+    setShowError("");
   };
 
   useEffect(() => {
@@ -78,6 +110,18 @@ const AddProduct = () => {
 
     return () => clearTimeout(timer);
   }, [showError, productData]);
+
+  useEffect(() => {
+    if (editAble && data) {
+      setProductData({
+        sku: data.sku || "",
+        product_name: data.product_name || "",
+        size: data.size || "",
+        color: data.color || "",
+        initial_stock: data.initial_stock || 0,
+      });
+    }
+  }, [editAble, data]);
 
   return (
     <>
@@ -189,10 +233,10 @@ const AddProduct = () => {
             onClick={saveStock}
             className="px-4 py-2 w-20 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
           >
-            ADD
+            {editAble ? "UPDATE" : "ADD"}
           </button>
           <button
-            // onClick={handleCancel}
+            onClick={handleCancel}
             className=" px-4 py-2 w-20 bg-gray-500 text-white rounded hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
           >
             Cancel

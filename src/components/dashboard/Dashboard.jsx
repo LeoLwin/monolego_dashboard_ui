@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import Menubar from "./MenuBar";
-import Product from "./Product";
+import Product from "./product/Product";
 import Home from "./Home";
+import Transaction from "./transaction/Transaction";
+
 
 const Dashboard = () => {
   const [isSidebarVisible, setIsSidebarVisible] = useState(false);
@@ -76,6 +78,7 @@ const Dashboard = () => {
             {/* Render Home or Product based on state */}
             {show === 0 && <Home />}
             {show === 1 && <Product />}
+            {show === 2 && <Transaction />}
           </div>
         </div>
       </div>

@@ -1,11 +1,9 @@
-// import { data } from "../../hello";
-
 import { useEffect, useState } from "react";
 // import { data } from "../../data";
-import Table from "../../Table";
+import Table from "../../../Table";
 import AddProduct from "./AddProduct";
 import axios from "axios";
-import { useAuth } from "../../AuthContext";
+import { useAuth } from "../../../AuthContext";
 
 const Product = () => {
   const { accessToken } = useAuth();
@@ -91,7 +89,7 @@ const Product = () => {
       console.log(error);
     }
   };
- 
+
   const productEdit = async (data) => {
     console.log("ProductEdit data  : ", data);
     setEditData(data);

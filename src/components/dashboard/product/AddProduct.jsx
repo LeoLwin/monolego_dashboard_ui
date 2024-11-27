@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useAuth } from "../../AuthContext";
+import { useAuth } from "../../../AuthContext";
 
 const AddProduct = ({ data, editAble }) => {
   const { accessToken } = useAuth();

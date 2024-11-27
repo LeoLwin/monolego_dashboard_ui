@@ -1,6 +1,9 @@
+import axios from "axios";
 import { useEffect, useState } from "react";
+import { useAuth } from "../../AuthContext";
 
 const AddProduct = () => {
+  const { accessToken } = useAuth();
   const [productData, setProductData] = useState({
     sku: "",
     product_name: "",
@@ -8,6 +11,8 @@ const AddProduct = () => {
     color: "",
     initial_stock: 0,
   });
+  const [showError, setShowError] = useState("");
+  const [code, setCode] = useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -17,9 +22,62 @@ const AddProduct = () => {
     }));
   };
 
+  const areAllFieldsValid = () => {
+    return Object.values(productData).every((value) => {
+      if (typeof value === "number") {
+        return value > 0; // Check for positive numbers (like stock).
+      }
+      return value.trim().length > 0; // Check for non-empty strings.
+    });
+  };
+
+  const saveStock = async () => {
+    try {
+      if (!areAllFieldsValid()) {
+        setShowError("All fields must be filled out and valid.");
+        return;
+      }
+
+      const serverDomain = import.meta.env.VITE_SERVER_DOMAIN;
+      const result = await axios.post(
+        `${serverDomain}/lego/stock/create`,
+        {
+          sku: productData.sku,
+          product_name: productData.product_name,
+          size: productData.size,
+          color: productData.color,
+          initial_stock: productData.initial_stock,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      console.log("Result :", result.data);
+      console.log("Result :", result.data.code);
+      if (result.data.code == "200") {
+        setCode("green");
+      } else {
+        setCode("red");
+      }
+      setShowError(result.data.message);
+      // Proceed with saving stock
+
+      // Your API call or saving logic here
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     console.log(productData);
-  }, [productData]);
+    const timer = setTimeout(() => {
+      setShowError("");
+    }, 5000);
+
+    return () => clearTimeout(timer);
+  }, [showError, productData]);
 
   return (
     <>
@@ -115,10 +173,20 @@ const AddProduct = () => {
             aria-describedby="initial_stock-description"
           />
         </div>
+        <div className="flex justify-center items-center p-2">
+          <p
+            className={`${
+              code == "green" ? "text-green-500" : "text-red-500"
+            } font-medium`}
+          >
+            {showError}
+          </p>
+        </div>
+
         <div className="flex gap-5 w-full shrink justify-center mt-1">
           <button
             type="submit"
-            // onClick={loginToggle}
+            onClick={saveStock}
             className="px-4 py-2 w-20 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
           >
             ADD

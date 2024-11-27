@@ -44,7 +44,7 @@ const Product = () => {
         `${serverDomain}/lego/stock/list`,
         {
           current: page,
-          limit,
+          limit, 
         },
         {
           headers: {
@@ -53,7 +53,7 @@ const Product = () => {
         }
       );
       console.log("Result :", result.data.data);
-      setData(result.data);
+      setData(result.data.data.by);
     } catch (error) {
       console.log(error);
     }

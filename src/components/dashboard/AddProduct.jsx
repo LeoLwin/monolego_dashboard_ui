@@ -237,6 +237,7 @@ const AddProduct = ({ data, editAble }) => {
           </button>
           <button
             onClick={handleCancel}
+
             className=" px-4 py-2 w-20 bg-gray-500 text-white rounded hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
           >
             Cancel

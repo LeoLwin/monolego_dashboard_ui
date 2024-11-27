@@ -1,7 +1,7 @@
 // import { data } from "../../hello";
 
 import { useEffect, useState } from "react";
-import { data } from "../../data";
+// import { data } from "../../data";
 import Table from "../../Table";
 import AddProduct from "./AddProduct";
 import axios from "axios";
@@ -12,7 +12,8 @@ const Product = () => {
   const [showAdd, setShowAdd] = useState(false);
   const [currentPage, setCurrentPage] = useState(1); // Current page
   const [rowsPerPage] = useState(10); // Rows per page
-  // const [data, setData] = useState([]);
+  const [data, setData] = useState([]);
+  const [totalData, setTotalData] = useState(null);
   // eslint-disable-next-line no-unused-vars
   const [codeStatus, setCodeStatus] = useState("");
   const [showError, setShowError] = useState("");
@@ -28,7 +29,7 @@ const Product = () => {
   };
 
   const handlePageChange = (page) => {
-    console.log("Page : ", page);
+    console.log("Product Page : ", page);
     setCurrentPage(page); // Update current page when Table notifies
   };
 
@@ -61,57 +62,59 @@ const Product = () => {
       );
       console.log("Result :", result.data.data);
       setData(result.data.data.by);
+      setTotalData(result.data.data.pagination.total);
     } catch (error) {
       console.log(error);
     }
   };
 
-  // const productDelete = async (id) => {
-  //   try {
-  //     const serverDomain = import.meta.env.VITE_SERVER_DOMAIN;
-  //     const result = await axios.delete(
-  //       `${serverDomain}/lego/stock/delete/${id}`,
-  //       {
-  //         headers: {
-  //           Authorization: `Bearer ${accessToken}`, // Use the token in the request headers
-  //         },
-  //       }
-  //     );
-  //     if (result.data.code == "200") {
-  //       setCodeStatus("green");
-  //     } else {
-  //       setIsError(true);
-  //       setCodeStatus("red");
-  //     }
-  //     setShowError(result.data.message);
-  //     console.log("Result :", result.data);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
-
-  // const productEdit = async (data) => {
-  //   console.log("ProductEdit data  : ", data);
-  //   setEditData(data);
-  //   setShowAdd(true);
-  //   setEditAble(true);
-  // };
+  const productDelete = async (id) => {
+    try {
+      const serverDomain = import.meta.env.VITE_SERVER_DOMAIN;
+      const result = await axios.delete(
+        `${serverDomain}/lego/stock/delete/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`, // Use the token in the request headers
+          },
+        }
+      );
+      if (result.data.code == "200") {
+        setCodeStatus("green");
+      } else {
+        setIsError(true);
+        setCodeStatus("red");
+      }
+      setShowError(result.data.message);
+      console.log("Result :", result.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+ 
+  const productEdit = async (data) => {
+    console.log("ProductEdit data  : ", data);
+    setEditData(data);
+    setShowAdd(true);
+    setEditAble(true);
+  };
 
   const onActionClick = async (row, actionType) => {
-    //   try {
-    //     // console.log("Data : ", row);
-    //     // console.log("ActionType : ", actionType);
-    //     if (actionType == "delete") {
-    //       await productDelete(row.id);
-    //     } else if (actionType == "edit") {
-    //       productEdit(row);
-    //     }
-    //   } catch (error) {
-    //     console.log(error);
-    //   }
+    try {
+      // console.log("Data : ", row);
+      // console.log("ActionType : ", actionType);
+      if (actionType == "delete") {
+        await productDelete(row.id);
+      } else if (actionType == "edit") {
+        productEdit(row);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
+
   useEffect(() => {
-    // fetchData(currentPage, rowsPerPage);
+    fetchData(currentPage, rowsPerPage);
     const timer = setTimeout(() => {
       setIsError(false);
       setShowError("");
@@ -163,6 +166,7 @@ const Product = () => {
             rowsPerPage={rowsPerPage}
             initialPage={currentPage}
             onPageChange={handlePageChange}
+            totalData={totalData}
             onActionClick={onActionClick} // Notify parent on page change
           />
         )}

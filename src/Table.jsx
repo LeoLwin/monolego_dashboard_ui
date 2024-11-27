@@ -6,6 +6,7 @@ const Table = ({
   data,
   rowsPerPage = 5, // Default rows per page
   initialPage = 1, // Initial page (default to 1)
+  totalData,
   onActionClick,
   onPageChange, // Callback for external page change handling
 }) => {
@@ -15,31 +16,38 @@ const Table = ({
   const [rowToDelete, setRowToDelete] = useState(null); // Store row to delete
 
   // Calculate the start and end index for slicing the data
-  const indexOfLastRow = currentPage * pageLimit;
+  // const indexOfLastRow = currentPage * pageLimit;
   // console.log("indexOfLastRow : ", indexOfLastRow);
-  const indexOfFirstRow = indexOfLastRow - pageLimit;
+  // const indexOfFirstRow = indexOfLastRow - pageLimit;
   // console.log("indexOfFirstRow : ", indexOfFirstRow);
-  const currentRows = data.slice(indexOfFirstRow, indexOfLastRow);
+  // const currentRows = data.slice(indexOfFirstRow, indexOfLastRow);
+  const currentRows = data;
   // console.log("currentRows", currentRows);
 
   // Calculate total pages
-  const totalPages = Math.ceil(data.length / pageLimit);
+  const totalPages = Math.ceil(totalData / pageLimit);
+  console.log("Table data : ", data);
+  console.log("TotalData ", totalData);
+  console.log("Page Limit : ", pageLimit);
+  console.log("totalPages : ", totalPages);
   // console.log("totalPages : ", totalPages);
 
   // Handle page change
-  const handlePageChange = (page) => {
-    if (page >= 1 && page <= totalPages) {
-      setCurrentPage(page);
-      if (onPageChange) {
-        onPageChange(page); // Notify parent about the page change
-      }
-    }
-  };
+  // const handlePageChange = (page) => {
+  //   console.log("Table handlePageChange : ", page);
+  //   console.log("Current page : ", currentPage);
+  //   if (page >= 1 && page <= totalPages) {
+  //     setCurrentPage(page);
+  //     if (onPageChange) {
+  //       onPageChange(page); // Notify parent about the page change
+  //     }
+  //   }
+  // };
 
   // Update page limit dynamically
   useEffect(() => {
     setPageLimit(rowsPerPage);
-  }, [rowsPerPage]);
+  }, [rowsPerPage, data]);
 
   useEffect(() => {
     setCurrentPage(initialPage);
@@ -107,7 +115,7 @@ const Table = ({
 
       <div className="mt-4 flex flex-row justify-center items-center space-y-2 sm:space-y-0 sm:space-x-2 shrink">
         <button
-          onClick={() => handlePageChange(currentPage - 1)}
+          onClick={() => onPageChange(currentPage - 1)}
           disabled={currentPage === 1}
           className="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded disabled:opacity-50 disabled:cursor-not-allowed"
         >
@@ -115,8 +123,8 @@ const Table = ({
         </button>
         <span className="px-4 py-2 text-center">{`Page ${currentPage} of ${totalPages}`}</span>
         <button
-          onClick={() => handlePageChange(currentPage + 1)}
-          // disabled={currentPage === totalPages}
+          onClick={() => onPageChange(currentPage + 1)}
+          disabled={currentPage === totalPages}
           className="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded disabled:opacity-50 disabled:cursor-not-allowed"
         >
           Next

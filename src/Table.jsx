@@ -7,6 +7,7 @@ const Table = ({
   rowsPerPage = 5, // Default rows per page
   initialPage = 1, // Initial page (default to 1)
   totalData,
+  Action,
   onActionClick,
   onPageChange, // Callback for external page change handling
 }) => {
@@ -71,14 +72,18 @@ const Table = ({
             {columns.map((column) => (
               <th
                 key={column.accessor}
-                className="px-2 sm:px-4 py-2 border-b text-left border-slate-400"
+                className="px-2 sm:px-4 py-2 border-b border-t text-left border-slate-400"
               >
                 {column.Header}
               </th>
             ))}
-            <th className="px-2 sm:px-4 py-2 border-b text-left border-slate-400">
-              Actions
-            </th>
+            {Action ? (
+              <th className="px-2 sm:px-4 py-2 border-b border-t text-left border-slate-400">
+                Actions
+              </th>
+            ) : (
+              ""
+            )}
           </tr>
         </thead>
         <tbody>
@@ -92,25 +97,29 @@ const Table = ({
                   {row[column.accessor]}
                 </td>
               ))}
-              <td className="px-2 sm:px-4 py-2 border-b border-slate-400">
-                <div className="flex flex-row">
-                  <button
-                    onClick={() => onActionClick(row, "edit")}
-                    className="px-2 py-1 text-white bg-blue-500 hover:bg-blue-600 rounded text-xs sm:text-sm mr-2"
-                  >
-                    <i className="fa-solid fa-pen-to-square"></i>
-                  </button>
-                  <button
-                    onClick={() => {
-                      setRowToDelete(row);
-                      setShowConfirm(true);
-                    }}
-                    className="px-2 py-1 text-white bg-red-500 hover:bg-red-600 rounded text-xs sm:text-sm"
-                  >
-                    <i className="fa-solid fa-trash"></i>
-                  </button>
-                </div>
-              </td>
+              {Action ? (
+                <td className="px-2 sm:px-4 py-2 border-b border-slate-400">
+                  <div className="flex flex-row">
+                    <button
+                      onClick={() => onActionClick(row, "edit")}
+                      className="px-2 py-1 text-white bg-blue-500 hover:bg-blue-600 rounded text-xs sm:text-sm mr-2"
+                    >
+                      <i className="fa-solid fa-pen-to-square"></i>
+                    </button>
+                    <button
+                      onClick={() => {
+                        setRowToDelete(row);
+                        setShowConfirm(true);
+                      }}
+                      className="px-2 py-1 text-white bg-red-500 hover:bg-red-600 rounded text-xs sm:text-sm"
+                    >
+                      <i className="fa-solid fa-trash"></i>
+                    </button>
+                  </div>
+                </td>
+              ) : (
+                ""
+              )}
             </tr>
           ))}
         </tbody>

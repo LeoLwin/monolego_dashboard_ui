@@ -18,6 +18,10 @@ const Transaction = () => {
   const [isError, setIsError] = useState(false);
   const [editData, setEditData] = useState(null);
   const [editAble, setEditAble] = useState(false);
+  const [searchData, setSearchData] = useState({
+    key: "",
+    value: "",
+  });
 
   const handleShowProductToggle = () => {
     // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -36,35 +40,92 @@ const Transaction = () => {
     { Header: "Transaction Date", accessor: "transaction_date" },
     { Header: "SKU", accessor: "sku" },
     { Header: "Qty In", accessor: "quantity_in" },
-    { Header: "Qty Out", accessor: " quantity_out" },
+    { Header: "Qty Out", accessor: "quantity_out" },
     { Header: "Remaining Stock", accessor: "remaining_stock" },
     { Header: "Transaction Type", accessor: "transaction_type" },
     { Header: "Remarks", accessor: "remarks" },
     { Header: "Created_at", accessor: "created_at" },
   ];
 
-  const fetchData = async (page = currentPage, limit = rowsPerPage) => {
+  const validateSearchData = (data) => {
+    const { key, value } = data;
+    console.log("validateData : ", data);
+
+    // Common check: Ensure key and value are not empty
+    if (!key && !value) {
+      setShowError(`Key and Value cannot both be empty.`);
+      return { isValid: false };
+    }
+
+    // Key-specific validation
+    if (key === "transaction_date" || key === "created_at") {
+      const dateRegex = /^\d{4}\/\d{2}\/\d{2}$/; // YYYY/MM/DD format
+      if (!dateRegex.test(value)) {
+        setShowError(`${key} must be in YYYY/MM/DD format.`);
+        return {
+          isValid: false,
+        };
+      }
+    }
+
+    // Additional validation for specific keys (example: sku)
+    if (key === "sku" && value.length < 3) {
+      setShowError("SKU must be at least 3 characters long.");
+      return {
+        isValid: false,
+      };
+    }
+
+    // All checks passed
+    return { isValid: true, message: "Validation successful." };
+  };
+
+  const searchButton = async () => {
+    try {
+      validateSearchData(searchData);
+      const { key, value } = searchData; // Destructure key-value pair
+      await fetchData(currentPage, rowsPerPage, {
+        [key]: value, // Dynamically pass the key-value pair
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const fetchData = async (
+    page = currentPage,
+    limit = rowsPerPage,
+    filters = {}
+  ) => {
     try {
       // console.log("Page : ", page, "And Limit : ", limit);
       const serverDomain = import.meta.env.VITE_SERVER_DOMAIN;
+      const payload = {
+        current: page,
+        limit,
+        ...filters, // Spread dynamic filters
+      };
+
       const result = await axios.post(
         `${serverDomain}/lego/transaction/filterList`,
-        {
-          current: page,
-          limit,
-        },
+        payload,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`, // Use the token in the request headers
           },
         }
       );
-      console.log("Result :", result.data.data);
+      console.log("Result :", result.data);
       setData(result.data.data.by);
       setTotalData(result.data.data.pagination.total);
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const refresh = async () => {
+    await fetchData(1, rowsPerPage);
+    setSearchData({ key: "", value: "" });
   };
 
   const productDelete = async (id) => {
@@ -112,7 +173,16 @@ const Transaction = () => {
     }
   };
 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setSearchData((prevData) => ({
+      ...prevData,
+      [name]: value, // Use the name of the field to update the specific property
+    }));
+  };
+
   useEffect(() => {
+    console.log(searchData);
     fetchData(currentPage, rowsPerPage);
     const timer = setTimeout(() => {
       setIsError(false);
@@ -120,7 +190,7 @@ const Transaction = () => {
     }, 5000);
 
     return () => clearTimeout(timer);
-  }, [currentPage, rowsPerPage, isError]);
+  }, [currentPage, rowsPerPage, isError, searchData]);
 
   return (
     <>
@@ -158,22 +228,29 @@ const Transaction = () => {
         </div>
         <div className="flex flex-col sm:flex-row shrink mb-1">
           <select
-            name=""
-            id=""
+            name="key"
+            id="key"
+            value={searchData.key}
+            onChange={handleChange}
             className="
             rounded-l-md 
             sm:border-2 md:border-2 lg:border-2  
             border-slate-500 mb-1"
           >
-            <option value="option1">Option 1</option>
-            <option value="option2">Option 2</option>
-            <option value="option3">Option 3</option>
-            <option value="option4">Option 4</option>
+            <option value="" disabled>
+              Select a field
+            </option>
+            <option value="sku">SKU</option>
+            <option value="transaction_date">Tr Date</option>
+            <option value="transaction_type">Tr Type</option>
+            <option value="created_at">Created_at</option>
           </select>
           <input
             type="text"
-            name="color"
+            name="value"
             id="color"
+            value={searchData.value}
+            onChange={handleChange}
             className="
               border-2 sm:border-2 md:border-2 
               sm:rounded-md md:rounded-md rounded-md
@@ -185,13 +262,25 @@ const Transaction = () => {
             placeholder="Enter what you want to search"
             aria-describedby="Search"
           />
-          <button
-            className="border-2 border-slate-500 rounded-r-md 
+          <div className="flex fexl-col justify-center items-center">
+            <button
+              type="submit"
+              onClick={searchButton}
+              className="border-2 border-slate-500 rounded-r-md 
             sm:border-2 md:border-2 lg:border-2 p-2 bg-blue-500 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 mb-1"
-          >
-            Search
-          </button>
+            >
+              Search
+            </button>
+            <div
+              onClick={refresh}
+              className="p-2 text-2xl font-extrabold  text-center shrink  justify-center items-center
+            transition-all duration-500 ease-out-in  hover:scale-105 "
+            >
+              <i className="fa-solid fa-arrows-rotate"></i>
+            </div>
+          </div>
         </div>
+
         {showAdd ? (
           <InputTransaction data={editData} editAble={editAble} />
         ) : (
@@ -202,6 +291,7 @@ const Transaction = () => {
             initialPage={currentPage}
             onPageChange={handlePageChange}
             totalData={totalData}
+            Action={null}
             onActionClick={onActionClick} // Notify parent on page change
           />
         )}

@@ -226,32 +226,34 @@ const Transaction = () => {
             {showError}
           </p>
         </div>
-        <div className="flex flex-col sm:flex-row shrink mb-1">
-          <select
-            name="key"
-            id="key"
-            value={searchData.key}
-            onChange={handleChange}
-            className="
+
+        {!showAdd ? (
+          <div className="flex flex-col sm:flex-row shrink mb-1">
+            <select
+              name="key"
+              id="key"
+              value={searchData.key}
+              onChange={handleChange}
+              className="
             rounded-l-md 
             sm:border-2 md:border-2 lg:border-2  
             border-slate-500 mb-1"
-          >
-            <option value="" disabled>
-              Select a field
-            </option>
-            <option value="sku">SKU</option>
-            <option value="transaction_date">Tr Date</option>
-            <option value="transaction_type">Tr Type</option>
-            <option value="created_at">Created_at</option>
-          </select>
-          <input
-            type="text"
-            name="value"
-            id="color"
-            value={searchData.value}
-            onChange={handleChange}
-            className="
+            >
+              <option value="" disabled>
+                Select a field
+              </option>
+              <option value="sku">SKU</option>
+              <option value="transaction_date">Tr Date</option>
+              <option value="transaction_type">Tr Type</option>
+              <option value="created_at">Created_at</option>
+            </select>
+            <input
+              type="text"
+              name="value"
+              id="color"
+              value={searchData.value}
+              onChange={handleChange}
+              className="
               border-2 sm:border-2 md:border-2 
               sm:rounded-md md:rounded-md rounded-md
               lg:border-t-2 lg:border-b-2 lg:rounded-none lg:border-0
@@ -259,27 +261,30 @@ const Transaction = () => {
               text-sm sm:text-base 
               placeholder-gray-400 
               focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 mb-1"
-            placeholder="Enter what you want to search"
-            aria-describedby="Search"
-          />
-          <div className="flex fexl-col justify-center items-center">
-            <button
-              type="submit"
-              onClick={searchButton}
-              className="border-2 border-slate-500 rounded-r-md 
+              placeholder="Enter what you want to search"
+              aria-describedby="Search"
+            />
+            <div className="flex fexl-col justify-center items-center">
+              <button
+                type="submit"
+                onClick={searchButton}
+                className="border-2 border-slate-500 rounded-r-md 
             sm:border-2 md:border-2 lg:border-2 p-2 bg-blue-500 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 mb-1"
-            >
-              Search
-            </button>
-            <div
-              onClick={refresh}
-              className="p-2 text-2xl font-extrabold  text-center shrink  justify-center items-center
+              >
+                Search
+              </button>
+              <div
+                onClick={refresh}
+                className="p-2 text-2xl font-extrabold  text-center shrink  justify-center items-center
             transition-all duration-500 ease-out-in  hover:scale-105 "
-            >
-              <i className="fa-solid fa-arrows-rotate"></i>
+              >
+                <i className="fa-solid fa-arrows-rotate"></i>
+              </div>
             </div>
           </div>
-        </div>
+        ) : (
+          ""
+        )}
 
         {showAdd ? (
           <InputTransaction data={editData} editAble={editAble} />

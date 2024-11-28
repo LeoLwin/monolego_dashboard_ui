@@ -124,7 +124,7 @@ const Transaction = () => {
 
   return (
     <>
-      <div className="flex flex-col items-center h-full shrink">
+      <div className="flex flex-col items-center h-full shrink items-center">
         <h3 className="text-xl sm:text-3xl md:text2xl font-extrabold shrink tracking-wide">
           {showAdd ? "ADD PRODUCT" : "PRODUCT LIST"}
         </h3>
@@ -155,6 +155,42 @@ const Transaction = () => {
           >
             {showError}
           </p>
+        </div>
+        <div className="flex flex-col sm:flex-row shrink mb-1">
+          <select
+            name=""
+            id=""
+            className="
+            rounded-l-md 
+            sm:border-2 md:border-2 lg:border-2  
+            border-slate-500 mb-1"
+          >
+            <option value="option1">Option 1</option>
+            <option value="option2">Option 2</option>
+            <option value="option3">Option 3</option>
+            <option value="option4">Option 4</option>
+          </select>
+          <input
+            type="text"
+            name="color"
+            id="color"
+            className="
+              border-2 sm:border-2 md:border-2 
+              sm:rounded-md md:rounded-md rounded-md
+              lg:border-t-2 lg:border-b-2 lg:rounded-none lg:border-0
+              border-slate-500 p-2 
+              text-sm sm:text-base 
+              placeholder-gray-400 
+              focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 mb-1"
+            placeholder="Enter what you want to search"
+            aria-describedby="Search"
+          />
+          <button
+            className="border-2 border-slate-500 rounded-r-md 
+            sm:border-2 md:border-2 lg:border-2 p-2 bg-blue-500 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 mb-1"
+          >
+            Search
+          </button>
         </div>
         {showAdd ? (
           <InputTransaction data={editData} editAble={editAble} />

@@ -14,6 +14,7 @@ const AddProduct = ({ data, editAble }) => {
   });
   const [showError, setShowError] = useState("");
   const [code, setCode] = useState("");
+  
   const handleChange = (e) => {
     const { name, value } = e.target;
     setProductData((prevData) => ({

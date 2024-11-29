@@ -165,7 +165,7 @@ const Product = () => {
             initialPage={currentPage}
             onPageChange={handlePageChange}
             totalData={totalData}
-            Action={true}
+            Action={{ edit: true, delete: true, action: true }}
             onActionClick={onActionClick} // Notify parent on page change
           />
         )}

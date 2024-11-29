@@ -37,12 +37,14 @@ const Transaction = () => {
 
   const columns = [
     { Header: "ID", accessor: "id" },
-    { Header: "Transaction Date", accessor: "transaction_date" },
+    { Header: "Tr Date", accessor: "transaction_date" },
     { Header: "SKU", accessor: "sku" },
+    { Header: "Color", accessor: "color" },
+    { Header: "Size", accessor: "size" },
     { Header: "Qty In", accessor: "quantity_in" },
     { Header: "Qty Out", accessor: "quantity_out" },
-    { Header: "Remaining Stock", accessor: "remaining_stock" },
-    { Header: "Transaction Type", accessor: "transaction_type" },
+    { Header: "In Stock", accessor: "remaining_stock" },
+    { Header: "Tr Type", accessor: "transaction_type" },
     { Header: "Remarks", accessor: "remarks" },
     { Header: "Created_at", accessor: "created_at" },
   ];
@@ -52,6 +54,16 @@ const Transaction = () => {
     console.log("validateData : ", data);
 
     // Common check: Ensure key and value are not empty
+    if (!key && value) {
+      setShowError(`Need Key to search.`);
+      return { isValid: false };
+    }
+
+    if (key && !value) {
+      setShowError(`Need value to search.`);
+      return { isValid: false };
+    }
+
     if (!key && !value) {
       setShowError(`Key and Value cannot both be empty.`);
       return { isValid: false };
@@ -196,7 +208,7 @@ const Transaction = () => {
     <>
       <div className="flex flex-col items-center h-full shrink items-center">
         <h3 className="text-xl sm:text-3xl md:text2xl font-extrabold shrink tracking-wide">
-          {showAdd ? "ADD PRODUCT" : "PRODUCT LIST"}
+          {showAdd ? "In/Out Transaction" : "TRANSACTION LIST"}
         </h3>
         <div className="flex justify-end w-full mb-1 ">
           <div className="lg:px-10 sm:justify-end md:justify-end">
@@ -208,7 +220,7 @@ const Transaction = () => {
               {showAdd ? (
                 <i className="fa-solid fa-arrow-left"></i>
               ) : (
-                <i className="fa-solid fa-plus"></i>
+                <i className="fa-solid fa-recycle"></i>
               )}
             </div>
           </div>
@@ -296,7 +308,7 @@ const Transaction = () => {
             initialPage={currentPage}
             onPageChange={handlePageChange}
             totalData={totalData}
-            Action={null}
+            Action={{ edit: true, delete: false, action: true }}
             onActionClick={onActionClick} // Notify parent on page change
           />
         )}

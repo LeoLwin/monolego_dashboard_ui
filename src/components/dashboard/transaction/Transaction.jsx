@@ -36,7 +36,7 @@ const Transaction = () => {
   };
 
   const columns = [
-    { Header: "ID", accessor: "id" },
+    // { Header: "ID", accessor: "id" },
     { Header: "Tr Date", accessor: "transaction_date" },
     { Header: "SKU", accessor: "sku" },
     { Header: "Color", accessor: "color" },
@@ -96,9 +96,10 @@ const Transaction = () => {
     try {
       validateSearchData(searchData);
       const { key, value } = searchData; // Destructure key-value pair
-      await fetchData(currentPage, rowsPerPage, {
+      const result = await fetchData(currentPage, rowsPerPage, {
         [key]: value, // Dynamically pass the key-value pair
       });
+      console.log("search Result : ", result);
     } catch (error) {
       console.log(error);
     }
@@ -127,7 +128,12 @@ const Transaction = () => {
           },
         }
       );
+
       console.log("Result :", result.data);
+      if (result.data.code !== "200") {
+        console.log("Result :", result.data.message);
+        setShowError(result.data.message);
+      }
       setData(result.data.data.by);
       setTotalData(result.data.data.pagination.total);
     } catch (error) {
@@ -140,32 +146,8 @@ const Transaction = () => {
     setSearchData({ key: "", value: "" });
   };
 
-  const productDelete = async (id) => {
-    try {
-      const serverDomain = import.meta.env.VITE_SERVER_DOMAIN;
-      const result = await axios.delete(
-        `${serverDomain}/lego/stock/delete/${id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`, // Use the token in the request headers
-          },
-        }
-      );
-      if (result.data.code == "200") {
-        setCodeStatus("green");
-      } else {
-        setIsError(true);
-        setCodeStatus("red");
-      }
-      setShowError(result.data.message);
-      console.log("Result :", result.data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const productEdit = async (data) => {
-    console.log("ProductEdit data  : ", data);
+  const makeTransaction = async (data) => {
+    console.log("Edit data  : ", data);
     setEditData(data);
     setShowAdd(true);
     setEditAble(true);
@@ -176,9 +158,9 @@ const Transaction = () => {
       // console.log("Data : ", row);
       // console.log("ActionType : ", actionType);
       if (actionType == "delete") {
-        await productDelete(row.id);
+        // await productDelete(row.id);
       } else if (actionType == "edit") {
-        productEdit(row);
+        makeTransaction(row);
       }
     } catch (error) {
       console.log(error);

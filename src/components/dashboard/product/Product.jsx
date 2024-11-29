@@ -32,7 +32,7 @@ const Product = () => {
   };
 
   const columns = [
-    { Header: "ID", accessor: "id" },
+    // { Header: "ID", accessor: "id" },
     { Header: "SKU", accessor: "sku" },
     { Header: "Product Name", accessor: "product_name" },
     { Header: "Size", accessor: "size" },

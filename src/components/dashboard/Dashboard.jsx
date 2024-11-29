@@ -3,7 +3,7 @@ import Menubar from "./MenuBar";
 import Product from "./product/Product";
 import Home from "./Home";
 import Transaction from "./transaction/Transaction";
-
+import SaleProduct from "./saleProduct/SaleProduct";
 
 const Dashboard = () => {
   const [isSidebarVisible, setIsSidebarVisible] = useState(false);
@@ -79,6 +79,7 @@ const Dashboard = () => {
             {show === 0 && <Home />}
             {show === 1 && <Product />}
             {show === 2 && <Transaction />}
+            {show === 3 && <SaleProduct />}
           </div>
         </div>
       </div>

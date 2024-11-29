@@ -67,7 +67,7 @@ const Table = ({
   return (
     <div className="overflow-x-auto w-full max-w-full">
       <table className="table-auto w-full border-collapse text-xs sm:text-sm md:text-base">
-        <thead>
+        <thead className="sticky top-0 bg-slate-100 z-10">
           <tr>
             {columns.map((column) => (
               <th
@@ -105,7 +105,7 @@ const Table = ({
                         onClick={() => onActionClick(row, "edit")}
                         className="px-2 py-1 text-white bg-blue-500 hover:bg-blue-600 rounded text-xs sm:text-sm mr-2"
                       >
-                        <i className="fa-solid fa-pen-to-square"></i> 
+                        <i className="fa-solid fa-pen-to-square"></i>
                       </button>
                     )}
                     {Action.delete && (
@@ -116,7 +116,7 @@ const Table = ({
                         }}
                         className="px-2 py-1 text-white bg-red-500 hover:bg-red-600 rounded text-xs sm:text-sm"
                       >
-                        <i className="fa-solid fa-trash"></i> 
+                        <i className="fa-solid fa-trash"></i>
                       </button>
                     )}
                   </div>

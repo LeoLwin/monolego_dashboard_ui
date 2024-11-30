@@ -105,7 +105,7 @@ const Table = ({
                         onClick={() => onActionClick(row, "edit")}
                         className="px-2 py-1 text-white bg-blue-500 hover:bg-blue-600 rounded text-xs sm:text-sm mr-2"
                       >
-                        <i className="fa-solid fa-pen-to-square"></i>
+                        <i className="fa-solid fa-pen-to-square"></i> 
                       </button>
                     )}
                     {Action.delete && (

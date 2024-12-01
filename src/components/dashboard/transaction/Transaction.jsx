@@ -44,6 +44,7 @@ const Transaction = () => {
     { Header: "Qty In", accessor: "quantity_in" },
     { Header: "Qty Out", accessor: "quantity_out" },
     { Header: "In Stock", accessor: "remaining_stock" },
+    { Header: "To Return", accessor: "remaining_return_qty" },
     { Header: "Tr Type", accessor: "transaction_type" },
     { Header: "Remarks", accessor: "remarks" },
     { Header: "Created_at", accessor: "created_at" },

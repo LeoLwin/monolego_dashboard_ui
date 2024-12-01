@@ -57,7 +57,7 @@ const Menubar = ({ onMenuClick, onProductClick }) => {
         </div>
         {/* Saleable Products */}
         <div
-          className="flex flex-row gap-2  h-10 lg:p-5 ml-2 border-2 rounded border-black items-center shrink lg:justify-start justify-center 
+          className="flex flex-row gap-2 h-10 lg:p-5 ml-2 border-2 rounded border-black items-center shrink lg:justify-start justify-center 
             transition-all duration-300 ease-in-out hover:bg-blue-400 hover:text-white hover:scale-105 hover:border-0"
           onClick={() => {
             if (window.innerWidth < 1024) {
@@ -66,7 +66,7 @@ const Menubar = ({ onMenuClick, onProductClick }) => {
             onProductClick(3); // Set view to Product
           }}
         >
-          <i className="fa-solid fa-cart-shopping text-xl"></i>
+          <i className="fa-solid fa-arrow-right-arrow-left text-xl"></i>
           <span className="hidden sm:block md:block font-bold text-lg">
             Saleable Products
           </span>

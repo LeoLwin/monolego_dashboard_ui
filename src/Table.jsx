@@ -100,12 +100,20 @@ const Table = ({
               {Action.action && (
                 <td className="px-2 sm:px-4 py-2 border-b border-slate-400">
                   <div className="flex flex-row">
+                    {Action.detail && (
+                      <button
+                        onClick={() => onActionClick(row, "edit")}
+                        className="px-2 py-1 text-white bg-blue-500 hover:bg-blue-800 rounded text-xs sm:text-sm"
+                      >
+                        <i className="fa-solid fa-circle-info"></i>
+                      </button>
+                    )}
                     {Action.edit && (
                       <button
                         onClick={() => onActionClick(row, "edit")}
                         className="px-2 py-1 text-white bg-blue-500 hover:bg-blue-600 rounded text-xs sm:text-sm mr-2"
                       >
-                        <i className="fa-solid fa-pen-to-square"></i> 
+                        <i className="fa-solid fa-pen-to-square"></i>
                       </button>
                     )}
                     {Action.delete && (

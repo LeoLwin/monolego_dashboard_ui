@@ -4,6 +4,7 @@ import Table from "../../../Table";
 import AddProduct from "../product/AddProduct";
 import axios from "axios";
 import { useAuth } from "../../../AuthContext";
+import { SalePrductDetail } from "./SalePrductDetail";
 
 const SaleProduct = () => {
   const { accessToken } = useAuth();
@@ -12,9 +13,10 @@ const SaleProduct = () => {
   const [rowsPerPage] = useState(10); // Rows per page
   const [data, setData] = useState([]);
   const [totalData, setTotalData] = useState(null);
-  // eslint-disable-next-line no-unused-vars
   const [codeStatus, setCodeStatus] = useState("");
   const [showError, setShowError] = useState("");
+  const [detailsData, setDetailsData] = useState(null);
+  const [showDetails, setShowDetails] = useState(false);
   const [isError, setIsError] = useState(false);
   const [editData, setEditData] = useState(null);
   const [editAble, setEditAble] = useState(false);
@@ -68,30 +70,6 @@ const SaleProduct = () => {
     }
   };
 
-  const productDelete = async (id) => {
-    try {
-      const serverDomain = import.meta.env.VITE_SERVER_DOMAIN;
-      const result = await axios.delete(
-        `${serverDomain}/lego/stock/delete/${id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`, // Use the token in the request headers
-          },
-        }
-      );
-      if (result.data.code == "200") {
-        setCodeStatus("green");
-      } else {
-        setIsError(true);
-        setCodeStatus("red");
-      }
-      setShowError(result.data.message);
-      console.log("Result :", result.data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   const productEdit = async (data) => {
     console.log("ProductEdit data  : ", data);
     setEditData(data);
@@ -103,8 +81,9 @@ const SaleProduct = () => {
     try {
       // console.log("Data : ", row);
       // console.log("ActionType : ", actionType);
-      if (actionType == "delete") {
-        await productDelete(row.id);
+      if (actionType == "details") {
+        setDetailsData(row); // Set the data for the details component
+        setShowDetails(true); // Show the details component
       } else if (actionType == "edit") {
         productEdit(row);
       }
@@ -112,6 +91,12 @@ const SaleProduct = () => {
       console.log(error);
     }
   };
+
+  const closeDetails = () => {
+    setDetailsData(null);
+    setShowDetails(false);
+  };
+  
 
   useEffect(() => {
     fetchData(currentPage, rowsPerPage);
@@ -155,6 +140,10 @@ const SaleProduct = () => {
           {showError}
         </p>
       </div>
+      {showDetails && detailsData && (
+        <SalePrductDetail data={detailsData} onClose={closeDetails} />
+      )}
+
       {showAdd ? (
         <AddProduct data={editData} editAble={editAble} />
       ) : (

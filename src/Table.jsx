@@ -102,7 +102,7 @@ const Table = ({
                   <div className="flex flex-row">
                     {Action.detail && (
                       <button
-                        onClick={() => onActionClick(row, "edit")}
+                        onClick={() => onActionClick(row, "details")}
                         className="px-2 py-1 text-white bg-blue-500 hover:bg-blue-800 rounded text-xs sm:text-sm"
                       >
                         <i className="fa-solid fa-circle-info"></i>

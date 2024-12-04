@@ -5,6 +5,7 @@ import AddProduct from "../product/AddProduct";
 import axios from "axios";
 import { useAuth } from "../../../AuthContext";
 import { SalePrductDetail } from "./SalePrductDetail";
+import AddSaleProduct from "./AddSaleProduct";
 
 const SaleProduct = () => {
   const { accessToken } = useAuth();
@@ -13,6 +14,7 @@ const SaleProduct = () => {
   const [rowsPerPage] = useState(10); // Rows per page
   const [data, setData] = useState([]);
   const [totalData, setTotalData] = useState(null);
+  // eslint-disable-next-line no-unused-vars
   const [codeStatus, setCodeStatus] = useState("");
   const [showError, setShowError] = useState("");
   const [detailsData, setDetailsData] = useState(null);
@@ -145,7 +147,7 @@ const SaleProduct = () => {
       )}
 
       {showAdd ? (
-        <AddProduct data={editData} editAble={editAble} />
+        <AddSaleProduct data={editData} editAble={editAble} />
       ) : (
         <Table
           columns={columns}

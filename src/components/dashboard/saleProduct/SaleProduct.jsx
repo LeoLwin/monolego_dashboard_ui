@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 // import { data } from "../../data";
 import Table from "../../../Table";
-import AddProduct from "../product/AddProduct";
 import axios from "axios";
 import { useAuth } from "../../../AuthContext";
 import { SalePrductDetail } from "./SalePrductDetail";

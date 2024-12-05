@@ -66,7 +66,8 @@ const Menubar = ({ onMenuClick, onProductClick }) => {
             onProductClick(3); // Set view to Product
           }}
         >
-          <i className="fa-solid fa-arrow-right-arrow-left text-xl"></i>
+          {/* <i className="fa-solid fa-arrow-right-arrow-left text-xl"></i> */}
+          <i className="fa-solid fa-shirt text-xl"></i>
           <span className="hidden sm:block md:block font-bold text-lg">
             Saleable Products
           </span>

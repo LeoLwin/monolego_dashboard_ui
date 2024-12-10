@@ -122,14 +122,14 @@ const AddSaleProduct = ({ data, editAble }) => {
       formData.append("remarks", saleData.remarks);
 
       // Append image files from imgData to the formData
-      let imageUpdateCheckIndex = [false, false, false, false];
+      let imageUpdateCheckIndex = [true, true, true, true];
       imgData.forEach((file, index) => {
         if (file instanceof File) {
           formData.append("image", file); // Append each file under the same key
         }
         if (file instanceof File) {
           // If the file exists, set the corresponding index to true
-          imageUpdateCheckIndex[index] = true;
+          imageUpdateCheckIndex[index] = false;
         }
       });
       // return
@@ -156,11 +156,15 @@ const AddSaleProduct = ({ data, editAble }) => {
         console.log("toDelteImg: ", toDelteImg); // Logs the array
         console.log("type of toDelteImg:", Array.isArray(toDelteImg));
 
-        formData.append("check_img_array", imageUpdateCheckIndex);
+        // formData.append("check_img_array", imageUpdateCheckIndex);
+        imageUpdateCheckIndex.forEach((condition, index) => {
+          formData.append(`check_img_array[${index}]`, condition);
+        });
         // eslint-disable-next-line no-unused-vars
         toDelteImg.forEach((url, index) => {
-          formData.append("toDelteImg", url); // Append each image URL separately
+          formData.append(`toDelteImg[${index}]`, url); // Append each image URL separately
         });
+
         result = await axios.put(
           // eslint-disable-next-line react/prop-types
           `${serverDomain}/lego/saleProducts/updateSaleProduct/${data.id}`,

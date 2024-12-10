@@ -13,10 +13,6 @@ const AddSaleProduct = ({ data, editAble }) => {
     stock_from_production: "",
     price: "",
     remarks: "",
-    img_1: "",
-    img_2: "",
-    img_3: "",
-    img_4: "",
   });
 
   const handleFileChange = (e, index) => {

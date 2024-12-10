@@ -28,12 +28,12 @@ const Dashboard = () => {
       <div className="flex flex-row m-5 h-screen rounded-md gap-1">
         {/* Sidebar */}
         <div
-          className={`flex flex-col border rounded-md bg-gray-200 transition-all duration-300 p-2  w-1/4 
+          className={`flex flex-col border rounded-md bg-gray-200 transition-all duration-300 p-2  lg:w-1/5 w-full w-full 
                ${
                  isSidebarVisible
                    ? "translate-x-0 w-full"
                    : "-translate-x-full w-0 hidden "
-               } lg:block lg:translate-x-0 lg:w-1/4 h-full `}
+               } lg:block lg:translate-x-0 lg:w-1/5 h-full `}
         >
           <Menubar
             onMenuClick={toggleSidebar}
@@ -43,9 +43,9 @@ const Dashboard = () => {
 
         {/* Main Content */}
         <div
-          className={`flex flex-col transition-all duration-500 border-2 border-black rounded-md ${
-            isSidebarVisible ? "hidden" : "w-full"
-          } shrink justify-center items-center`}
+          className={`flex flex-col transition-all duration-500 border-2 border-black rounded-md  shrink justify-center items-center lg:w-4/5 w-full w-full ${
+            isSidebarVisible ? "hidden w-full" : "w-full"
+          }`}
         >
           {/* Button to toggle sidebar visibility on small screens */}
           <button

@@ -2,9 +2,12 @@ import { useEffect, useState } from "react";
 import { useAuth } from "../../../AuthContext";
 import axios from "axios";
 
+// eslint-disable-next-line react/prop-types
 const AddSaleProduct = ({ data, editAble }) => {
   const { accessToken } = useAuth();
+  // eslint-disable-next-line no-unused-vars
   const [showError, setShowError] = useState("");
+  // eslint-disable-next-line no-unused-vars
   const [code, setCode] = useState("");
   const [images, setImages] = useState([null, null, null, null]);
   const [imgData, setImgData] = useState([null, null, null, null]);
@@ -15,6 +18,37 @@ const AddSaleProduct = ({ data, editAble }) => {
     price: "",
     remarks: "",
   });
+
+  useEffect(() => {
+    console.log("EditAble : ", editAble);
+    console.log("Data : ", data);
+    if (editAble && data) {
+      setSaleData({
+        // eslint-disable-next-line react/prop-types
+        sku: data.sku || "",
+        // eslint-disable-next-line react/prop-types
+        product_name: data.product_name || "",
+        // eslint-disable-next-line react/prop-types
+        stock_from_production: data.stock_from_production || "",
+        // eslint-disable-next-line react/prop-types
+        price: data.price || 0,
+        // eslint-disable-next-line react/prop-types
+        remarks: data.remarks || "",
+      });
+      setImages([
+        // eslint-disable-next-line react/prop-types
+        data.img_1 || null,
+        // eslint-disable-next-line react/prop-types
+        data.img_2 || null,
+        // eslint-disable-next-line react/prop-types
+        data.img_3 || null,
+        // eslint-disable-next-line react/prop-types
+        data.img_4 || null,
+      ]);
+
+      // Optionally, if imgData needs to store any specific information about the images, set that here
+    }
+  }, [editAble, data]);
 
   const handleFileChange = (e, index) => {
     const file = e.target.files[0];
@@ -88,45 +122,70 @@ const AddSaleProduct = ({ data, editAble }) => {
       formData.append("remarks", saleData.remarks);
 
       // Append image files from imgData to the formData
+      let imageUpdateCheckIndex = [false, false, false, false];
       imgData.forEach((file, index) => {
         if (file instanceof File) {
           formData.append("image", file); // Append each file under the same key
         }
-      });
-
-      console.log("Form Data : ", formData);
-
-      // return
-      // if (editAble) {
-      // result = await axios.put(
-      //   `${serverDomain}/lego/stock/update/${data.id}`,
-      //   {
-      //     sku: productData.sku,
-      //     product_name: productData.product_name,
-      //     size: productData.size,
-      //     color: productData.color,
-      //     initial_stock: productData.initial_stock,
-      //   },
-      //   {
-      //     headers: {
-      //       Authorization: `Bearer ${accessToken}`,
-      //     },
-      //   }
-      // );
-      // } else {
-      result = await axios.post(
-        `${serverDomain}/lego/saleProducts/addSaleProduct`,
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            "Content-Type": "multipart/form-data",
-          },
+        if (file instanceof File) {
+          // If the file exists, set the corresponding index to true
+          imageUpdateCheckIndex[index] = true;
         }
-      );
-      console.log(result.data);
+      });
+      // return
+      if (editAble) {
+        // imgData
+        console.log(imageUpdateCheckIndex);
 
-      // }
+        let toDelteImg = [];
+        imageUpdateCheckIndex.forEach((isUpdated, index) => {
+          console.log("isUpdated: ", isUpdated); // Logs whether the image is updated (true/false)
+
+          if (!isUpdated) {
+            // If the image should be deleted (false)
+            const imageKey = `img_${index + 1}`; // Mapping index to img_1, img_2, etc.
+            console.log("imageKey: ", imageKey); // Logs the current image key being checked
+
+            if (data[imageKey]) {
+              console.log("Pushing image URL: ", data[imageKey]); // Logs the image URL being pushed to the array
+              toDelteImg.push(data[imageKey]); // Add the image URL to the toDelteImg array
+            }
+          }
+        });
+
+        console.log("toDelteImg: ", toDelteImg); // Logs the array
+        console.log("type of toDelteImg:", Array.isArray(toDelteImg));
+
+        formData.append("check_img_array", imageUpdateCheckIndex);
+        // eslint-disable-next-line no-unused-vars
+        toDelteImg.forEach((url, index) => {
+          formData.append("toDelteImg", url); // Append each image URL separately
+        });
+        result = await axios.put(
+          // eslint-disable-next-line react/prop-types
+          `${serverDomain}/lego/saleProducts/updateSaleProduct/${data.id}`,
+          formData,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+        return;
+      } else {
+        result = await axios.post(
+          `${serverDomain}/lego/saleProducts/addSaleProduct`,
+          formData,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+        console.log(result.data);
+      }
 
       console.log("Result :", result.data);
       console.log("Result :", result.data.code);
@@ -148,12 +207,14 @@ const AddSaleProduct = ({ data, editAble }) => {
     console.log(saleData);
     console.log(images);
     console.log(imgData);
+
     // const timer = setTimeout(() => {
     //   setShowError("");
     // }, 5000);
 
     // return () => clearTimeout(timer);
   }, [saleData, images, imgData]);
+
   return (
     <>
       <div className="flex flex-col border-2 border-slate-500 w-full rounded-md h-full p-5 flex-wrap overflow-x-auto">
@@ -179,6 +240,7 @@ const AddSaleProduct = ({ data, editAble }) => {
                 className="border-2 border-slate-500 rounded-lg p-2 text-sm sm:text-base placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 placeholder="Enter the sku"
                 aria-describedby="sku-description"
+                disabled={editAble}
               />
             </div>
             <div className="flex flex-col gap-1 w-48">

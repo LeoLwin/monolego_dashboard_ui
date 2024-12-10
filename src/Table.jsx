@@ -103,7 +103,7 @@ const Table = ({
                     {Action.detail && (
                       <button
                         onClick={() => onActionClick(row, "details")}
-                        className="px-2 py-1 text-white bg-blue-500 hover:bg-blue-800 rounded text-xs sm:text-sm"
+                        className="px-2 py-1 text-white bg-blue-500 hover:bg-blue-800 rounded text-xs sm:text-sm mr-2"
                       >
                         <i className="fa-solid fa-circle-info"></i>
                       </button>
@@ -111,7 +111,7 @@ const Table = ({
                     {Action.edit && (
                       <button
                         onClick={() => onActionClick(row, "edit")}
-                        className="px-2 py-1 text-white bg-blue-500 hover:bg-blue-600 rounded text-xs sm:text-sm mr-2"
+                        className="px-2 py-1 text-white bg-gray-500 hover:bg-gray-800 rounded text-xs sm:text-sm mr-2"
                       >
                         <i className="fa-solid fa-pen-to-square"></i>
                       </button>

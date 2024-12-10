@@ -189,7 +189,7 @@ const Transaction = () => {
 
   return (
     <>
-      <div className="flex flex-col items-center h-full shrink items-center">
+      <div className="flex flex-col items-center h-full shrink">
         <h3 className="text-xl sm:text-3xl md:text2xl font-extrabold shrink tracking-wide">
           {showAdd ? "In/Out Transaction" : "TRANSACTION LIST"}
         </h3>

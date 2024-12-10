@@ -114,7 +114,7 @@ const SaleProduct = () => {
   return (
     <div className="flex flex-col items-center h-full shrink">
       <h3 className="text-xl sm:text-3xl md:text2xl font-extrabold shrink tracking-wide">
-        {showAdd ? "ADD PRODUCT" : "PRODUCT LIST"}
+        {showAdd ? "ADD SALEABLE PRODUCT" : "SALEABLE PRODUCT LIST"}
       </h3>
       <div className="flex justify-end w-full mb-1 ">
         <div className="lg:px-10 sm:justify-end md:justify-end">

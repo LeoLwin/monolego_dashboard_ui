@@ -4,6 +4,7 @@ import Product from "./product/Product";
 import Home from "./Home";
 import Transaction from "./transaction/Transaction";
 import SaleProduct from "./saleProduct/SaleProduct";
+import OurProducts from "./order/OurProducts";
 
 const Dashboard = () => {
   const [isSidebarVisible, setIsSidebarVisible] = useState(false);
@@ -80,6 +81,7 @@ const Dashboard = () => {
             {show === 1 && <Product />}
             {show === 2 && <Transaction />}
             {show === 3 && <SaleProduct />}
+            {show === 4 && <OurProducts />}
           </div>
         </div>
       </div>

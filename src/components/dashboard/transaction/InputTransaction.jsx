@@ -230,22 +230,28 @@ const InputTransaction = ({ data, editAble }) => {
         </div>
         <div className="flex flex-col gap-1">
           <label
-            htmlFor="size"
+            htmlFor="transaction_type"
             className="text-sm sm:text-base underline decoration-solid capitalize font-bold px-2"
           >
             Transaction Type
           </label>
-          <input
-            type="text"
+          <select
             name="transaction_type"
             id="transaction_type"
             value={productData.transaction_type}
             onChange={handleChange}
             className="border-2 border-slate-500 rounded-lg p-2 text-sm sm:text-base placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            placeholder="Enter the Transaction Type"
-            aria-describedby="size-description"
-          />
+            aria-describedby="transaction_type-description"
+          >
+            <option value="" disabled>
+              Select Transaction Type
+            </option>
+            <option value="Buying">Buying</option>
+            <option value="FromProduction">From Production</option>
+            <option value="ToProduction">To Production</option>
+          </select>
         </div>
+
         <div className="flex flex-col gap-1">
           <label
             htmlFor="color"

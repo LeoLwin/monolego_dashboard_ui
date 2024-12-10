@@ -45,32 +45,32 @@ export const SalePrductDetail = ({ data, onClose }) => {
           </div>
 
           <div className="flex flex-col flex-wrap sm:flex-row md:flex-row gap-1 shrink-0 overflow-hidden max-w-full">
-            <div className="flex flex-row flex-wrap border-2 border-slate-500 rounded-md p-1 shrink-0 overflow-hidden max-w-full">
+            <div className="flex flex-row flex-wrap border-2 border-green-500 rounded-md p-1 shrink-0 overflow-hidden max-w-full bg-green-500 ">
               <label htmlFor="id" className="shrink-0 text-base font-medium">
                 Available :
               </label>
               <p>{data.stock_available}</p>
             </div>
-            <div className="flex flex-row flex-wrap border-2 border-slate-500 rounded-md p-1 shrink-0 overflow-hidden max-w-full">
+            <div className="flex flex-row flex-wrap border-2 border-slate-500 rounded-md p-1 shrink-0 overflow-hidden max-w-full bg-slate-500 text-white">
               <label htmlFor="id" className="shrink-0 text-base font-medium">
-                Adhustment :
+                Adjustment :
               </label>
               <p>{data.stock_adjustment}</p>
             </div>
-            <div className="flex flex-row flex-wrap border-2 border-slate-500 rounded-md p-1 shrink-0 overflow-hidden max-w-full">
+            <div className="flex flex-row flex-wrap border-2 border-yellow-500 rounded-md p-1 shrink-0 overflow-hidden max-w-full bg-yellow-500 ">
               <label htmlFor="id" className="shrink-0 text-base font-medium">
                 InOrder :
               </label>
-              <p>{data.stock_inorder}</p>
+              <p> {data.stock_inorder}</p>
             </div>
 
-            <div className="flex flex-row flex-wrap border-2 border-slate-500 rounded-md p-1 shrink-0 overflow-hidden max-w-full">
+            <div className="flex flex-row flex-wrap border-2 border-red-500 rounded-md p-1 shrink-0 overflow-hidden max-w-full bg-red-500 text-white">
               <label htmlFor="id" className="shrink-0 text-base font-medium">
                 SoldOut :
               </label>
               <p>{data.stock_soldout}</p>
             </div>
-            <div className="flex flex-row flex-wrap border-2 border-slate-500 rounded-md p-1 shrink-0 overflow-hidden max-w-full">
+            <div className="flex flex-row flex-wrap border-2 border-amber-500 rounded-md p-1 shrink-0 overflow-hidden max-w-full bg-amber-500">
               <label htmlFor="id" className="shrink-0 text-base font-medium">
                 On Hold :
               </label>

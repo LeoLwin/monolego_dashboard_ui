@@ -58,7 +58,7 @@ const AddSaleProduct = ({ data, editAble }) => {
       remarks: "",
     });
     setImages([null, null, null, null]);
-    // setShowError("");
+    setShowError("");
   };
 
   const areAllFieldsValid = () => {
@@ -125,17 +125,18 @@ const AddSaleProduct = ({ data, editAble }) => {
         }
       );
       console.log(result.data);
+
       // }
 
-      // console.log("Result :", result.data);
-      // console.log("Result :", result.data.code);
-      // if (result.data.code == "200") {
-      //   setCode("green");
-      //   handleCancel();
-      // } else {
-      //   setCode("red");
-      // }
-      // setShowError(result.data.message);
+      console.log("Result :", result.data);
+      console.log("Result :", result.data.code);
+      if (result.data.code == "200") {
+        setCode("green");
+        handleCancel();
+      } else {
+        setCode("red");
+      }
+      setShowError(result.data.message);
 
       // editAble = false;
     } catch (error) {

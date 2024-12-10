@@ -7,6 +7,7 @@ const AddSaleProduct = ({ data, editAble }) => {
   const [showError, setShowError] = useState("");
   const [code, setCode] = useState("");
   const [images, setImages] = useState([null, null, null, null]);
+  const [imgData, setImgData] = useState([null, null, null, null]);
   const [saleData, setSaleData] = useState({
     sku: "",
     product_name: "",
@@ -20,16 +21,24 @@ const AddSaleProduct = ({ data, editAble }) => {
     if (file) {
       const imageUrl = URL.createObjectURL(file); // Create a URL for the uploaded file
       const updatedImages = [...images];
-      updatedImages[index] = imageUrl; // Update the specific index
+      updatedImages[index] = imageUrl; // Update the specific index with the URL for preview
       setImages(updatedImages);
+
+      // Store the actual file in imgData for submitting
+      const updatedImgData = [...imgData];
+      updatedImgData[index] = file; // Store the file for submission
+      setImgData(updatedImgData);
     }
   };
 
-  // Handle image reset
   const handleResetImage = (index) => {
     const updatedImages = [...images];
-    updatedImages[index] = null; // Reset the image at the specified index
+    updatedImages[index] = null; // Reset the image preview URL
     setImages(updatedImages);
+
+    const updatedImgData = [...imgData];
+    updatedImgData[index] = null; // Reset the actual file data
+    setImgData(updatedImgData);
   };
 
   const handleChange = (e) => {
@@ -52,59 +61,81 @@ const AddSaleProduct = ({ data, editAble }) => {
     // setShowError("");
   };
 
+  const areAllFieldsValid = () => {
+    return (
+      saleData.sku &&
+      saleData.product_name &&
+      saleData.stock_from_production &&
+      saleData.price &&
+      images.every((image) => image) // Check if all images are uploaded
+    );
+  };
+
   const saveStock = async () => {
     try {
-      // if (!areAllFieldsValid()) {
-      //   setShowError("All fields must be filled out and valid.");
-      //   return;
+      if (!areAllFieldsValid()) {
+        setShowError("All fields must be filled out and valid.");
+        return;
+      }
+
+      let result;
+      const serverDomain = import.meta.env.VITE_SERVER_DOMAIN;
+      const formData = new FormData();
+      formData.append("sku", saleData.sku);
+      formData.append("product_name", saleData.product_name);
+      formData.append("stock_from_production", saleData.stock_from_production);
+      formData.append("price", saleData.price);
+      formData.append("remarks", saleData.remarks);
+
+      // Append image files from imgData to the formData
+      imgData.forEach((file, index) => {
+        if (file instanceof File) {
+          formData.append("image", file); // Append each file under the same key
+        }
+      });
+
+      console.log("Form Data : ", formData);
+
+      // return
+      // if (editAble) {
+      // result = await axios.put(
+      //   `${serverDomain}/lego/stock/update/${data.id}`,
+      //   {
+      //     sku: productData.sku,
+      //     product_name: productData.product_name,
+      //     size: productData.size,
+      //     color: productData.color,
+      //     initial_stock: productData.initial_stock,
+      //   },
+      //   {
+      //     headers: {
+      //       Authorization: `Bearer ${accessToken}`,
+      //     },
+      //   }
+      // );
+      // } else {
+      result = await axios.post(
+        `${serverDomain}/lego/saleProducts/addSaleProduct`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      console.log(result.data);
       // }
 
-      const serverDomain = import.meta.env.VITE_SERVER_DOMAIN;
-      let result;
-
-      if (editAble) {
-        // result = await axios.put(
-        //   `${serverDomain}/lego/stock/update/${data.id}`,
-        //   {
-        //     sku: productData.sku,
-        //     product_name: productData.product_name,
-        //     size: productData.size,
-        //     color: productData.color,
-        //     initial_stock: productData.initial_stock,
-        //   },
-        //   {
-        //     headers: {
-        //       Authorization: `Bearer ${accessToken}`,
-        //     },
-        //   }
-        // );
-      } else {
-        result = await axios.post(
-          `${serverDomain}/lego/stock/create`,
-          {
-            sku: productData.sku,
-            product_name: productData.product_name,
-            size: productData.size,
-            color: productData.color,
-            initial_stock: productData.initial_stock,
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        );
-      }
-
-      console.log("Result :", result.data);
-      console.log("Result :", result.data.code);
-      if (result.data.code == "200") {
-        setCode("green");
-        handleCancel();
-      } else {
-        setCode("red");
-      }
-      setShowError(result.data.message);
+      // console.log("Result :", result.data);
+      // console.log("Result :", result.data.code);
+      // if (result.data.code == "200") {
+      //   setCode("green");
+      //   handleCancel();
+      // } else {
+      //   setCode("red");
+      // }
+      // setShowError(result.data.message);
 
       // editAble = false;
     } catch (error) {
@@ -114,12 +145,14 @@ const AddSaleProduct = ({ data, editAble }) => {
 
   useEffect(() => {
     console.log(saleData);
+    console.log(images);
+    console.log(imgData);
     // const timer = setTimeout(() => {
     //   setShowError("");
     // }, 5000);
 
     // return () => clearTimeout(timer);
-  }, [saleData]);
+  }, [saleData, images, imgData]);
   return (
     <>
       <div className="flex flex-col border-2 border-slate-500 w-full rounded-md h-full p-5 flex-wrap overflow-x-auto">
@@ -341,7 +374,7 @@ const AddSaleProduct = ({ data, editAble }) => {
           <div className="flex gap-5 w-full shrink justify-center mt-1 mt-5 ">
             <button
               type="submit"
-              // onClick={saveStock}
+              onClick={saveStock}
               className="px-4 py-2 w-20 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
             >
               {editAble ? "UPDATE" : "ADD"}

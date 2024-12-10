@@ -106,23 +106,23 @@ export const SalePrductDetail = ({ data, onClose }) => {
             </div>
           </div>
           <div className="flex flex-col flex-wrap sm:flex-row md:flex-row gap-1 shrink-0 overflow-hidden max-w-full">
-            <div className="flex flex-row flex-wrap border-2 border-slate-500 rounded-md p-1 shrink-0 overflow-hidden max-w-full">
+            <div className="flex flex-row flex-wrap border-2 border-slate-500 rounded-md p-1 shrink-0 overflow-hidden max-w-full items-center justify-center">
               <img
-                src="https://picsum.photos/200/300
-"
+                src={data.img_1}
                 alt=""
+                className="w-full h-full object-cover"
               />
             </div>
-            <div className="flex flex-row flex-wrap border-2 border-slate-500 rounded-md p-1 shrink-0 overflow-hidden max-w-full">
+            <div className="flex flex-row flex-wrap border-2 border-slate-500 rounded-md p-1 shrink-0 overflow-hidden max-w-full items-center justify-center">
               <img
-                src="https://picsum.photos/200/300"
+                src={data.img_2}
                 alt=""
                 className="w-full h-full object-cover"
               />
             </div>
             <div className="flex flex-row flex-wrap border-2 border-slate-500 rounded-md p-1 shrink-0 overflow-hidden max-w-full">
               <img
-                src="https://picsum.photos/200/300"
+                src={data.img_3}
                 alt=""
                 className="w-full h-full object-cover"
               />
@@ -130,9 +130,9 @@ export const SalePrductDetail = ({ data, onClose }) => {
 
             <div className="flex flex-row flex-wrap border-2 border-slate-500 rounded-md p-1 shrink-0 overflow-hidden max-w-full ">
               <img
-                src="https://picsum.photos/200/300"
+                src={data.img_4}
                 alt=""
-                className="w-full h-full object-cover"
+                className="object-cover w-full h-full rounded-md"
               />
             </div>
           </div>

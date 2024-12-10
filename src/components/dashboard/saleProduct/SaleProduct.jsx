@@ -64,6 +64,10 @@ const SaleProduct = () => {
         }
       );
       console.log("Result :", result.data.data);
+      if (result.data.code != 200) {
+        setShowError(result.data.message);
+        return;
+      }
       setData(result.data.data.by);
       setTotalData(result.data.data.pagination.total);
     } catch (error) {
@@ -97,7 +101,6 @@ const SaleProduct = () => {
     setDetailsData(null);
     setShowDetails(false);
   };
-  
 
   useEffect(() => {
     fetchData(currentPage, rowsPerPage);

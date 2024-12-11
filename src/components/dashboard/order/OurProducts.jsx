@@ -11,7 +11,17 @@ const OurProducts = () => {
   const [totalPages, setTotalPages] = useState(1); // Total pages
   const [detailsData, setDetailsData] = useState(null);
   const [showDetails, setShowDetails] = useState(false);
+  const [showError, setShowError] = useState("");
+  const [isError, setIsError] = useState(false);
+  const [codeStatus, setCodeStatus] = useState("");
   const [showSearch, setShowSearch] = useState(false);
+  const [searchData, setSearchData] = useState({
+    sku: "",
+    product_name: "",
+    price: "",
+    size: "",
+    color: "",
+  });
 
   const fetchData = async (
     page = currentPage,
@@ -27,12 +37,14 @@ const OurProducts = () => {
         limit,
         filter: {
           sku: filters.sku || null,
+          product_name: filters.product_name || null,
           price: filters.price || null,
           size: filters.size || null,
           color: filters.color || null,
           created_at: filters.created_at || null,
         },
       };
+      console.log("PayLoad");
       const result = await axios.post(
         `${serverDomain}/lego/saleProducts/filterSaleableList`,
         payload,
@@ -44,13 +56,79 @@ const OurProducts = () => {
       );
       console.log("Result :", result.data.data);
       if (result.data.code != 200) {
-        // setData([]);
-        // setShowError(result.data.message);
+        setData([]);
+        setIsError(true);
+        setShowError(result.data.message);
         return;
       }
       setData(result.data.data.by);
       console.log(result.data.data.pagination);
       setTotalPages(result.data.data.pagination.rowsPerPage || 1);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // const validateSearchData = (data) => {
+  //   const { key, value } = data;
+  //   console.log("validateData : ", data);
+
+  //   // Common check: Ensure key and value are not empty
+  //   if (!key && value) {
+  //     setIsError(true);
+  //     setShowError(`Need Key to search.`);
+  //     return { isValid: false };
+  //   }
+
+  //   if (key && !value) {
+  //     setIsError(true);
+  //     setShowError(`Need value to search.`);
+  //     return { isValid: false };
+  //   }
+
+  //   if (!key && !value) {
+  //     setIsError(true);
+  //     setShowError(`Key and Value cannot both be empty.`);
+  //     return { isValid: false };
+  //   }
+
+  //   // Key-specific validation
+
+  //   // Additional validation for specific keys (example: sku)
+  //   if (key === "sku" && value.length < 3) {
+  //     setIsError(true);
+  //     setShowError("SKU must be at least 3 characters long.");
+  //     return {
+  //       isValid: false,
+  //     };
+  //   }
+
+  //   // All checks passed
+  //   return { isValid: true, message: "Validation successful." };
+  // };
+  const searchButton = async () => {
+    try {
+      const filledFields = Object.values(searchData).filter(
+        (value) => value.trim() !== ""
+      ).length;
+
+      // Validate that only one field is filled
+      if (filledFields > 1) {
+        setShowError("Only one field can be used for searching at a time.");
+        return;
+      }
+
+      if (filledFields === 0) {
+        setShowError("Please enter a value to search.");
+        return;
+      }
+      const filters = searchData;
+
+      console.log(filters);
+
+      await fetchData(currentPage, rowsPerPage, filters);
+
+      // showSearchBar(false);
     } catch (error) {
       console.log(error);
     }
@@ -75,18 +153,56 @@ const OurProducts = () => {
     setShowSearch(data);
   };
 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setSearchData((prevData) => ({
+      ...prevData,
+      [name]: value, // Use the name of the field to update the specific property
+    }));
+  };
+
+  const refresh = async () => {
+    await fetchData(1, rowsPerPage);
+    setSearchData({
+      sku: "",
+      product_name: "",
+      price: "",
+      size: "",
+      color: "",
+    });
+    setShowSearch(false);
+    setIsError(false);
+    setShowError("");
+  };
+
   useEffect(() => {
+    console.log(searchData);
     fetchData(currentPage, rowsPerPage);
+    console.log();
     const timer = setTimeout(() => {
       // setIsError(false);
-      // setShowError("");
+      setShowError("");
     }, 5000);
 
     return () => clearTimeout(timer);
-  }, [currentPage, rowsPerPage]);
+  }, [currentPage, rowsPerPage, searchData, isError, showError]);
+
   return (
     <>
       <div className="flex flex-col w-full justify-center items-center rounded-md h-full overflow-x-auto">
+        <div className="flex justify-center items-center">
+          <p
+            className={`${
+              isError == "" ? "hide" : "block"
+            } font-medium border rounded-md ${
+              codeStatus == "green"
+                ? "text-green-500 bg-green-100"
+                : "text-red-500 bg-red-100"
+            }`}
+          >
+            {showError}
+          </p>
+        </div>
         {showDetails && detailsData && (
           <SaleProductDetail data={detailsData} onClose={closeDetails} />
         )}
@@ -111,36 +227,68 @@ const OurProducts = () => {
             <div className="flex flex-row items-center justify-start">
               <input
                 type="text"
+                name="sku"
+                value={searchData.sku}
                 className="border-b-2 text-center w-24"
+                onChange={handleChange}
                 placeholder="SKU"
+              />
+            </div>
+            <div className="flex flex-row items-center justify-start">
+              <input
+                type="text"
+                name="product_name"
+                value={searchData.product_name}
+                className="border-b-2 text-center w-24"
+                onChange={handleChange}
+                placeholder="Product Name"
               />
             </div>
             <div className="flex flex-row gap-1 items-center justify-start">
               <input
-                type="text"
+                type="number"
+                name="price"
+                value={searchData.price}
                 className="border-b-2 text-center w-24"
+                onChange={handleChange}
                 placeholder="Price"
               />
             </div>
             <div className="flex flex-row gap-1 items-center justify-start">
               <input
                 type="text"
+                name="size"
+                value={searchData.size}
                 className="border-b-2 text-center w-24"
+                onChange={handleChange}
                 placeholder="size"
               />
             </div>
             <div className="flex flex-row gap-1 items-center justify-start">
               <input
                 type="text"
+                name="color"
+                value={searchData.color}
                 className="border-b-2 text-center w-24"
+                onChange={handleChange}
                 placeholder="color"
               />
             </div>
             <button
               className="rounded-md text-sm w-8 bg-teal-500  text-center text-white font-bold hover:ring-2 hover:ring-teal-300"
-              onClick={() => showSearchBar(false)}
+              onClick={() => {
+                searchButton();
+              }}
             >
               <i className="fa-solid fa-check"></i>
+            </button>
+            <button
+              className="rounded-md text-sm w-8 bg-teal-500  text-center text-white font-bold hover:ring-2 hover:ring-teal-300"
+              onClick={() => {
+                refresh();
+              }}
+            >
+              <i className="fa-solid fa-arrows-rotate"></i>
             </button>
           </div>
         </div>

@@ -106,33 +106,33 @@ export const SalePrductDetail = ({ data, onClose }) => {
             </div>
           </div>
           <div className="flex flex-col flex-wrap sm:flex-row md:flex-row gap-1 shrink-0 overflow-hidden max-w-full">
-            <div className="flex flex-row flex-wrap border-2 border-slate-500 rounded-md p-1 shrink-0 overflow-hidden max-w-full items-center justify-center">
+            <div className="flex rounded-md border border-indigo-500 bg-gray-50 p-1 shadow-md w-48 h-52 items-center justify-center relative">
               <img
                 src={data.img_1}
                 alt=""
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover border-2 border-slate-200 rounded-md"
               />
             </div>
-            <div className="flex flex-row flex-wrap border-2 border-slate-500 rounded-md p-1 shrink-0 overflow-hidden max-w-full items-center justify-center">
+            <div className="flex rounded-md border border-indigo-500 bg-gray-50 p-1 shadow-md w-48 h-52 items-center justify-center relative">
               <img
                 src={data.img_2}
                 alt=""
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover border-2 border-slate-200 rounded-md"
               />
             </div>
-            <div className="flex flex-row flex-wrap border-2 border-slate-500 rounded-md p-1 shrink-0 overflow-hidden max-w-full">
+            <div className="flex rounded-md border border-indigo-500 bg-gray-50 p-1 shadow-md w-48 h-52 items-center justify-center relative">
               <img
                 src={data.img_3}
                 alt=""
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover border-2 border-slate-200 rounded-md"
               />
             </div>
 
-            <div className="flex flex-row flex-wrap border-2 border-slate-500 rounded-md p-1 shrink-0 overflow-hidden max-w-full ">
+            <div className="flex rounded-md border border-indigo-500 bg-gray-50 p-1 shadow-md w-48 h-52 items-center justify-center relative">
               <img
                 src={data.img_4}
                 alt=""
-                className="object-cover w-full h-full rounded-md"
+                className="w-full h-full object-cover border-2 border-slate-200 rounded-md"
               />
             </div>
           </div>

@@ -176,7 +176,7 @@ const AddSaleProduct = ({ data, editAble }) => {
             },
           }
         );
-        return;
+        console.log("Result : ", result);
       } else {
         result = await axios.post(
           `${serverDomain}/lego/saleProducts/addSaleProduct`,

@@ -90,7 +90,8 @@ const OurProducts = () => {
         {showDetails && detailsData && (
           <SaleProductDetail data={detailsData} onClose={closeDetails} />
         )}
-        <div className="flex flex-row mt-10  mb-2 w-auto sm:w-full p-2 items-start justify-start  sm:mt-10 md:mt-10 lg:mt-0">
+
+        <div className="flex flex-row mt-10 w-full mb-2 w-auto sm:w-full items-start justify-start  sm:mt-10 md:mt-10 lg:mt-0">
           <div
             onClick={() => {
               showSearchBar(true);
@@ -104,8 +105,8 @@ const OurProducts = () => {
           </div>
           <div
             className={`${
-              showSearch ? "flex" : "hidden"
-            } flex-col w-full gap-2 p-1 sm:flex-row md:flex-row justify-start`}
+              showSearch ? "flex flex-row" : "hidden"
+            } flex-row flex-wrap w-full gap-2 p-1  justify-start`}
           >
             <div className="flex flex-row items-center justify-start">
               <input
@@ -143,6 +144,7 @@ const OurProducts = () => {
             </button>
           </div>
         </div>
+
         <div className="flex flex-row flex-wrap sm:flex-row md:flex-row w-full gap-10 justify-center sm:justify-start items-center rounded-md h-full overflow-x-auto">
           {data.map((item, index) => {
             return (

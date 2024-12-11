@@ -191,8 +191,7 @@ const AddSaleProduct = ({ data, editAble }) => {
         console.log(result.data);
       }
 
-      console.log("Result :", result.data);
-      console.log("Result :", result.data.code);
+      console.log("Result : ", result.data);
       if (result.data.code == "200") {
         setCode("green");
         handleCancel();

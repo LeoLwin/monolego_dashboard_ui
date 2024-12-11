@@ -132,6 +132,7 @@ const Transaction = () => {
 
       console.log("Result :", result.data);
       if (result.data.code !== "200") {
+        setData([]);
         console.log("Result :", result.data.message);
         setShowError(result.data.message);
       }

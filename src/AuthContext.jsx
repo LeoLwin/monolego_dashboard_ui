@@ -7,7 +7,7 @@ const AuthContext = createContext();
 // This is the provider component that will wrap our entire app
 // eslint-disable-next-line react/prop-types
 export const AuthProvider = ({ children }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(true); // Whether user is logged in or not
+  const [isAuthenticated, setIsAuthenticated] = useState(false); // Whether user is logged in or not
   const [accessToken, setAccessToken] = useState(null); // Store the access token when logged in
 
   // Function to log in

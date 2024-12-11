@@ -21,6 +21,10 @@ const SaleProduct = () => {
   const [isError, setIsError] = useState(false);
   const [editData, setEditData] = useState(null);
   const [editAble, setEditAble] = useState(false);
+  const [searchData, setSearchData] = useState({
+    key: "",
+    value: "",
+  });
 
   const handleShowProductToggle = () => {
     // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -47,16 +51,29 @@ const SaleProduct = () => {
     { Header: "Created_at", accessor: "created_at" },
   ];
 
-  const fetchData = async (page = currentPage, limit = rowsPerPage) => {
+  const fetchData = async (
+    page = currentPage,
+    limit = rowsPerPage,
+    filters = {}
+  ) => {
     try {
       // console.log("Page : ", page, "And Limit : ", limit);
       const serverDomain = import.meta.env.VITE_SERVER_DOMAIN;
+
+      const payload = {
+        current: page,
+        limit,
+        filter: {
+          sku: filters.sku || null,
+          price: filters.price || null,
+          size: filters.size || null,
+          color: filters.color || null,
+          created_at: filters.created_at || null,
+        },
+      };
       const result = await axios.post(
         `${serverDomain}/lego/saleProducts/filterSaleableList`,
-        {
-          current: page,
-          limit,
-        },
+        payload,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`, // Use the token in the request headers
@@ -65,10 +82,12 @@ const SaleProduct = () => {
       );
       console.log("Result :", result.data.data);
       if (result.data.code != 200) {
+        setData([]);
         setShowError(result.data.message);
         return;
       }
       setData(result.data.data.by);
+
       setTotalData(result.data.data.pagination.total);
     } catch (error) {
       console.log(error);
@@ -80,6 +99,79 @@ const SaleProduct = () => {
     setEditData(data);
     setShowAdd(true);
     setEditAble(true);
+  };
+
+  const validateSearchData = (data) => {
+    const { key, value } = data;
+    console.log("validateData : ", data);
+
+    // Common check: Ensure key and value are not empty
+    if (!key && value) {
+      setShowError(`Need Key to search.`);
+      return { isValid: false };
+    }
+
+    if (key && !value) {
+      setShowError(`Need value to search.`);
+      return { isValid: false };
+    }
+
+    if (!key && !value) {
+      setShowError(`Key and Value cannot both be empty.`);
+      return { isValid: false };
+    }
+
+    // Key-specific validation
+    if (key === "transaction_date" || key === "created_at") {
+      const dateRegex = /^\d{4}\/\d{2}\/\d{2}$/; // YYYY/MM/DD format
+      if (!dateRegex.test(value)) {
+        setShowError(`${key} must be in YYYY/MM/DD format.`);
+        return {
+          isValid: false,
+        };
+      }
+    }
+
+    // Additional validation for specific keys (example: sku)
+    if (key === "sku" && value.length < 3) {
+      setShowError("SKU must be at least 3 characters long.");
+      return {
+        isValid: false,
+      };
+    }
+
+    // All checks passed
+    return { isValid: true, message: "Validation successful." };
+  };
+
+  const searchButton = async () => {
+    try {
+      const isValid = validateSearchData(searchData);
+      if (!isValid.isValid) return; // Exit if validation fails
+
+      const filters = {
+        [searchData.key]: searchData.value, // Use dynamic keys for flexibility
+      };
+
+      await fetchData(currentPage, rowsPerPage, filters);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const refresh = async () => {
+    await fetchData(1, rowsPerPage);
+    setSearchData({ key: "", value: "" });
+    setIsError(false);
+    setShowError("");
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setSearchData((prevData) => ({
+      ...prevData,
+      [name]: value, // Use the name of the field to update the specific property
+    }));
   };
 
   const onActionClick = async (row, actionType) => {
@@ -103,6 +195,7 @@ const SaleProduct = () => {
   };
 
   useEffect(() => {
+    console.log(searchData);
     fetchData(currentPage, rowsPerPage);
     const timer = setTimeout(() => {
       setIsError(false);
@@ -110,7 +203,7 @@ const SaleProduct = () => {
     }, 5000);
 
     return () => clearTimeout(timer);
-  }, [currentPage, rowsPerPage, isError]);
+  }, [currentPage, rowsPerPage, isError, searchData]);
   return (
     <div className="flex flex-col items-center h-full shrink">
       <h3 className="text-xl sm:text-3xl md:text2xl font-extrabold shrink tracking-wide">
@@ -135,7 +228,7 @@ const SaleProduct = () => {
         <p
           className={`${
             isError == "" ? "hide" : "block"
-          } font-medium border rounded-md ${
+          } font-medium border rounded-md mb-2 ${
             codeStatus == "green"
               ? "text-green-500 bg-green-100"
               : "text-red-500 bg-red-100"
@@ -144,6 +237,64 @@ const SaleProduct = () => {
           {showError}
         </p>
       </div>
+      {!showAdd ? (
+        <div className="flex flex-col sm:flex-row shrink mb-1">
+          <select
+            name="key"
+            id="key"
+            value={searchData.key}
+            onChange={handleChange}
+            className="
+            rounded-l-md w-52 sm:w-24 md:w-24
+            sm:border-2 md:border-2 lg:border-2  
+            border-slate-500 mb-1"
+          >
+            <option value="" disabled>
+              Select
+            </option>
+            <option value="sku">SKU</option>
+            <option value="price">Price</option>
+            <option value="size">Size</option>
+            <option value="color">Color</option>
+            <option value="created_at">Created_at</option>
+          </select>
+          <input
+            type="text"
+            name="value"
+            id="color"
+            value={searchData.value}
+            onChange={handleChange}
+            className="
+              border-2 sm:border-2 md:border-2 
+              sm:rounded-md md:rounded-md rounded-md
+              lg:border-t-2 lg:border-b-2 lg:rounded-none lg:border-0
+              border-slate-500 p-2  w-52
+              text-sm sm:text-base 
+              placeholder-gray-400 
+              focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 mb-1"
+            placeholder="Enter what you want to search"
+            aria-describedby="Search"
+          />
+          <div className="flex fexl-col justify-center items-center">
+            <button
+              type="submit"
+              onClick={searchButton}
+              className="border-2 border-slate-500 rounded-md sm:rounded-md md:rounded-md lg:rounded-r-md xl:rounded-r-md w-52 sm:w-20 md:w-20 p-2 bg-blue-500 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 mb-1"
+            >
+              Search
+            </button>
+            <div
+              onClick={refresh}
+              className="m-2 text-2xl font-extrabold  text-center shrink  justify-center items-center
+            transition-all duration-500 ease-out-in  hover:scale-105 "
+            >
+              <i className="fa-solid fa-arrows-rotate"></i>
+            </div>
+          </div>
+        </div>
+      ) : (
+        ""
+      )}
       {showDetails && detailsData && (
         <SalePrductDetail data={detailsData} onClose={closeDetails} />
       )}

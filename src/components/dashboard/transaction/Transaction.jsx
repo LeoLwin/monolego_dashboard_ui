@@ -208,7 +208,7 @@ const Transaction = () => {
             </div>
           </div>
         </div>
-        <div className="flex justify-center items-center">
+        <div className="flex justify-center items-center p-2">
           <p
             className={`${
               isError == "" ? "hide" : "block"
@@ -230,12 +230,12 @@ const Transaction = () => {
               value={searchData.key}
               onChange={handleChange}
               className="
-            rounded-l-md 
+            rounded-l-md w-52 sm:w-24 md:w-24
             sm:border-2 md:border-2 lg:border-2  
             border-slate-500 mb-1"
             >
               <option value="" disabled>
-                Select a field
+                Select
               </option>
               <option value="sku">SKU</option>
               <option value="transaction_date">Tr Date</option>
@@ -252,7 +252,7 @@ const Transaction = () => {
               border-2 sm:border-2 md:border-2 
               sm:rounded-md md:rounded-md rounded-md
               lg:border-t-2 lg:border-b-2 lg:rounded-none lg:border-0
-              border-slate-500 p-2 
+              border-slate-500 p-2  w-52
               text-sm sm:text-base 
               placeholder-gray-400 
               focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 mb-1"
@@ -263,14 +263,13 @@ const Transaction = () => {
               <button
                 type="submit"
                 onClick={searchButton}
-                className="border-2 border-slate-500 rounded-r-md 
-            sm:border-2 md:border-2 lg:border-2 p-2 bg-blue-500 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 mb-1"
+                className="border-2 border-slate-500 rounded-md sm:rounded-md md:rounded-md lg:rounded-r-md xl:rounded-r-md w-52 sm:w-20 md:w-20 p-2 bg-blue-500 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 mb-1"
               >
                 Search
               </button>
               <div
                 onClick={refresh}
-                className="p-2 text-2xl font-extrabold  text-center shrink  justify-center items-center
+                className="m-2 text-2xl font-extrabold  text-center shrink  justify-center items-center
             transition-all duration-500 ease-out-in  hover:scale-105 "
               >
                 <i className="fa-solid fa-arrows-rotate"></i>

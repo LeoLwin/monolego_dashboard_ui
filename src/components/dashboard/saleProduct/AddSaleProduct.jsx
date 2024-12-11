@@ -198,6 +198,7 @@ const AddSaleProduct = ({ data, editAble }) => {
         handleCancel();
       } else {
         setCode("red");
+        handleCancel();
       }
       setShowError(result.data.message);
 
@@ -212,11 +213,11 @@ const AddSaleProduct = ({ data, editAble }) => {
     console.log(images);
     console.log(imgData);
 
-    // const timer = setTimeout(() => {
-    //   setShowError("");
-    // }, 5000);
+    const timer = setTimeout(() => {
+      setShowError("");
+    }, 5000);
 
-    // return () => clearTimeout(timer);
+    return () => clearTimeout(timer);
   }, [saleData, images, imgData]);
 
   return (
@@ -283,6 +284,7 @@ const AddSaleProduct = ({ data, editAble }) => {
                 className="border-2 border-slate-500 rounded-lg p-2 text-sm sm:text-base placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 placeholder="Enter the Qty"
                 aria-describedby="stock_from_production-description"
+                disabled={editAble}
               />
             </div>
             <div className="flex flex-col gap-1 w-48">
@@ -437,7 +439,15 @@ const AddSaleProduct = ({ data, editAble }) => {
               ))}
             </div>
           </div>
-
+          <div className="flex justify-center items-center p-2">
+            <p
+              className={`${
+                code == "green" ? "text-green-500" : "text-red-500"
+              } font-medium border rounded-md`}
+            >
+              {showError}
+            </p>
+          </div>
           <div className="flex gap-5 w-full shrink justify-center mt-1 mt-5 ">
             <button
               type="submit"

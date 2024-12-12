@@ -6,7 +6,7 @@ import { SaleProductDetail } from "./SaleProductDetail";
 const OurProducts = () => {
   const { accessToken } = useAuth();
   const [currentPage, setCurrentPage] = useState(1); // Current page
-  const [rowsPerPage] = useState(5); // Rows per page
+  const [rowsPerPage] = useState(6); // Rows per page
   const [data, setData] = useState([]);
   const [totalPages, setTotalPages] = useState(1); // Total pages
   const [detailsData, setDetailsData] = useState(null);

@@ -1,9 +1,10 @@
 /* eslint-disable react/prop-types */
 export const SaleProductDetail = ({ data, onClose }) => {
-  console.log("SaleProductDetail : ", data);
+  console.log("Data : ", data);
+
   return (
     <>
-      <div className="absolute inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50 h-screen overflow-auto">
+      <div className="absolute inset-0 bg-gray-900 bg-opacity-50 flex items-center h-full justify-center z-50 overflow-auto">
         <div className="flex flex-col bg-white p-6 rounded-lg shadow-lg  gap-1 max-h-full overflow-auto">
           <h2 className="text-2xl font-bold mb-4">Product Details</h2>
 

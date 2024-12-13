@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useAuth } from "../../../AuthContext";
 import { SaleProductDetail } from "./SaleProductDetail";
+import Order from "./Order";
 const OurProducts = () => {
   const { accessToken } = useAuth();
   const [currentPage, setCurrentPage] = useState(1); // Current page
@@ -11,6 +12,7 @@ const OurProducts = () => {
   const [totalPages, setTotalPages] = useState(1); // Total pages
   const [detailsData, setDetailsData] = useState(null);
   const [showDetails, setShowDetails] = useState(false);
+  const [showOrder, setShowOrder] = useState(false);
   const [showError, setShowError] = useState("");
   const [isError, setIsError] = useState(false);
   // eslint-disable-next-line no-unused-vars
@@ -150,6 +152,15 @@ const OurProducts = () => {
     setShowDetails(false);
   };
 
+  const openOrder = (item) => {
+    setDetailsData(item);
+    setShowOrder(true);
+  };
+
+  const closeOrder = () => {
+    setShowOrder(false);
+  };
+
   const showSearchBar = (data) => {
     setShowSearch(data);
   };
@@ -206,6 +217,10 @@ const OurProducts = () => {
         </div>
         {showDetails && detailsData && (
           <SaleProductDetail data={detailsData} onClose={closeDetails} />
+        )}
+
+        {showOrder && detailsData && (
+          <Order data={detailsData} onClose={closeOrder} />
         )}
 
         <div className="flex flex-row mt-10 w-full mb-2 w-auto sm:w-full items-start justify-start  sm:mt-10 md:mt-10 lg:mt-0">
@@ -343,7 +358,12 @@ const OurProducts = () => {
                   </div>
 
                   <div className="flex flex-row gap-1">
-                    <button className="border-2 border-blue-500 rounded-md text-sm w-16 text-center text-blue-500 font-bold hover:ring-2 hover:ring-blue-300">
+                    <button
+                      className="border-2 border-blue-500 rounded-md text-sm w-16 text-center text-blue-500 font-bold hover:ring-2 hover:ring-blue-300"
+                      onClick={() => {
+                        openOrder(item);
+                      }}
+                    >
                       ORDER
                     </button>
 

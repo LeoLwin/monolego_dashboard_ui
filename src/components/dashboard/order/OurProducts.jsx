@@ -13,6 +13,7 @@ const OurProducts = () => {
   const [showDetails, setShowDetails] = useState(false);
   const [showError, setShowError] = useState("");
   const [isError, setIsError] = useState(false);
+  // eslint-disable-next-line no-unused-vars
   const [codeStatus, setCodeStatus] = useState("");
   const [showSearch, setShowSearch] = useState(false);
   const [searchData, setSearchData] = useState({
@@ -326,16 +327,16 @@ const OurProducts = () => {
                     <p className=" font-mono font-bold">Color: {item.color}</p>
                   </div>
 
-                  <div className="flex flex-row gap-1 items-center justify-start w-full">
+                  <div className="flex flex-row gap-1 items-center justify-start w-full flex-wrap">
                     <p className="bg-green-500 p-1 rounded-md text-sm w-auto text-center">
                       Yes : {item.stock_available}
                     </p>
                     <p className="bg-yellow-500 p-1 rounded-md text-sm w-auto text-center ">
                       Order : {item.stock_inorder}
                     </p>
-                    {/* <p className="bg-amber-500 p-1 rounded-md text-sm w-14 text-center">
-                    Hold : {item.stock_onhold}
-                  </p> */}
+                    <p className="bg-amber-500 p-1 rounded-md text-sm w-20 text-center">
+                      Hold : {item.stock_onhold}
+                    </p>
                     <p className="bg-red-500 p-1 rounded-md text-sm w-auto text-center ">
                       Sold : {item.stock_soldout}
                     </p>

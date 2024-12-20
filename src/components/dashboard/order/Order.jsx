@@ -3,6 +3,7 @@ import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import axios from "axios";
 import { useAuth } from "../../../AuthContext";
+import ConfirmationModal from "../../models/ConfirmationModal";
 
 /* eslint-disable react/prop-types */
 const Order = ({ data, onClose }) => {
@@ -13,7 +14,7 @@ const Order = ({ data, onClose }) => {
   const [orderData, setOrderData] = useState({
     id: "",
     qty: "",
-    promoPercentage: "",
+    promoPercentage: 0,
   });
 
   const handleChange = (e) => {
@@ -35,21 +36,16 @@ const Order = ({ data, onClose }) => {
       //   return;
       // }
 
-      const userConfirmed = window.confirm(
-        "Are you sure you want to place this order?"
-      );
-      if (!userConfirmed) {
-        return; // Exit if the user cancels
-      }
+      
       const serverDomain = import.meta.env.VITE_SERVER_DOMAIN;
       let result;
 
       result = await axios.post(
         `${serverDomain}/lego/order/order`,
         {
-          id: "",
-          qty: "",
-          promoPercentage: "",
+          id: data.id,
+          qty: orderData.qty,
+          promoPercentage: orderData.promoPercentage,
         },
         {
           headers: {
@@ -62,6 +58,7 @@ const Order = ({ data, onClose }) => {
       console.log("Result :", result.data.code);
       if (result.data.code == "200") {
         setCode("green");
+        downloadAsImage();
       } else {
         setCode("red");
       }
@@ -102,6 +99,14 @@ const Order = ({ data, onClose }) => {
       <div className="absolute inset-0 bg-gray-900 bg-opacity-50 flex items-center h-full justify-center z-50 h-screen overflow-auto">
         <div className="flex flex-col bg-white p-6 rounded-lg shadow-lg  gap-1 max-h-full overflow-auto">
           <h2 className="text-2xl font-bold mb-4">ORDER</h2>
+          <ConfirmationModal
+            isOpen={showModal}
+            onClose={() => setShowModal(false)}
+            onConfirm={() => {
+              saveOrder();
+              setShowModal(false);
+            }}
+          />
 
           {/* First Row */}
           <div className="flex sm:flex-row gap-2 flex-col">

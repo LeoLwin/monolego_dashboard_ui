@@ -1,9 +1,11 @@
 import { useState } from "react";
+import { useAuth } from "../../AuthContext";
 
 // eslint-disable-next-line react/prop-types
 const Menubar = ({ onMenuClick, onProductClick }) => {
   const [showButton, setShowButton] = useState("");
-
+  const { userData } = useAuth();
+  console.log(userData);
   const showButtonAction = (data) => {
     setShowButton(data);
     console.log("showButton : ", showButton);
@@ -120,6 +122,28 @@ const Menubar = ({ onMenuClick, onProductClick }) => {
             Our Products
           </span>
         </div>
+
+        {userData.role === "admin" && (
+          <div
+            className={`flex flex-row gap-2 text-xl h-10 lg:p-5 ml-2 border-2 rounded border-black items-center shrink lg:justify-start justify-center 
+          transition-all duration-300 ease-in-out hover:bg-blue-400 hover:text-white hover:scale-105 hover:border-0 ${
+            showButton === 5 ? "bg-blue-500 text-white scale-105 border-0" : ""
+          }`}
+            onClick={() => {
+              if (window.innerWidth < 1024) {
+                onMenuClick(); // Toggle sidebar on small screens
+              }
+              onProductClick(5); // Set view to Product
+              showButtonAction(5);
+            }}
+          >
+            {/* <i className="fa-solid fa-arrow-right-arrow-left text-xl"></i> */}
+            <i className="fas fa-shopping-bag text-xl"></i>
+            <span className="hidden sm:block md:block font-bold text-lg">
+              Check Orders
+            </span>
+          </div>
+        )}
       </div>
     </>
   );

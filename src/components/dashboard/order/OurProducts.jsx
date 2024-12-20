@@ -15,6 +15,7 @@ const OurProducts = () => {
   const [showOrder, setShowOrder] = useState(false);
   const [showError, setShowError] = useState("");
   const [isError, setIsError] = useState(false);
+  const [order, setOrder] = useState(true);
   // eslint-disable-next-line no-unused-vars
   const [codeStatus, setCodeStatus] = useState("");
   const [showSearch, setShowSearch] = useState(false);
@@ -152,8 +153,9 @@ const OurProducts = () => {
     setShowDetails(false);
   };
 
-  const openOrder = (item) => {
+  const openOrder = (item, order) => {
     setDetailsData(item);
+    setOrder(order);
     setShowOrder(true);
   };
 
@@ -220,7 +222,7 @@ const OurProducts = () => {
         )}
 
         {showOrder && detailsData && (
-          <Order data={detailsData} onClose={closeOrder} />
+          <Order data={detailsData} onClose={closeOrder} order={order} />
         )}
 
         <div className="flex flex-row mt-10 w-full mb-2 w-auto sm:w-full items-start justify-start  sm:mt-10 md:mt-10 lg:mt-0">
@@ -361,14 +363,19 @@ const OurProducts = () => {
                     <button
                       className="border-2 border-blue-500 rounded-md text-sm w-16 text-center text-blue-500 font-bold hover:ring-2 hover:ring-blue-300"
                       onClick={() => {
-                        openOrder(item);
+                        openOrder(item, true);
                       }}
                     >
                       ORDER
                     </button>
 
                     {/* Hold Button */}
-                    <button className="border-2 border-orange-500 rounded-md text-sm w-16 text-center text-orange-500 font-bold hover:ring-2 hover:ring-orange-300">
+                    <button
+                      className="border-2 border-orange-500 rounded-md text-sm w-16 text-center text-orange-500 font-bold hover:ring-2 hover:ring-orange-300"
+                      onClick={() => {
+                        openOrder(item, false);
+                      }}
+                    >
                       HOLD
                     </button>
                     <button

@@ -9,12 +9,18 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false); // Whether user is logged in or not
   const [accessToken, setAccessToken] = useState(null); // Store the access token when logged in
+  const [userData, setUserData] = useState(null);
 
   // Function to log in
   const login = (token) => {
     console.log("Context Token : ", token);
     setAccessToken(token); // Save the access token
     setIsAuthenticated(true); // Set the authentication status to true
+    setUserData({
+      id: 1,
+      name: "Kaung Htet Lwin",
+      role: "admin",
+    });
     console.log("isAuthenticated : ", isAuthenticated);
   };
 
@@ -27,7 +33,7 @@ export const AuthProvider = ({ children }) => {
   return (
     // Provide these functions and state to the rest of the app
     <AuthContext.Provider
-      value={{ isAuthenticated, accessToken, login, logout }}
+      value={{ isAuthenticated, accessToken, login, logout, userData }}
     >
       {children}
     </AuthContext.Provider>

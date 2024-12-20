@@ -6,17 +6,17 @@ import { useAuth } from "../../../AuthContext";
 import ConfirmationModal from "../../models/ConfirmationModal";
 
 /* eslint-disable react/prop-types */
-const Order = ({ data, onClose }) => {
-  const { accessToken } = useAuth();
+const Order = ({ data, onClose, order }) => {
+  const { accessToken, userData } = useAuth();
   const [showError, setShowError] = useState("");
   const [code, setCode] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [orderData, setOrderData] = useState({
     id: "",
     qty: "",
+    order: order,
     promoPercentage: 0,
   });
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     if (name === "qty" && value < 0) return; // Prevent negative values
@@ -36,7 +36,6 @@ const Order = ({ data, onClose }) => {
       //   return;
       // }
 
-      
       const serverDomain = import.meta.env.VITE_SERVER_DOMAIN;
       let result;
 
@@ -45,6 +44,7 @@ const Order = ({ data, onClose }) => {
         {
           id: data.id,
           qty: orderData.qty,
+          order: order,
           promoPercentage: orderData.promoPercentage,
         },
         {
@@ -125,8 +125,7 @@ const Order = ({ data, onClose }) => {
                   // onChange={handleChange}
                   className="border-2 border-slate-500 rounded-lg p-1 text-sm sm:text-base placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   // placeholder="Enter the sku"
-                  aria-describedby="size-description"
-                  disabled={false}
+                  readOnly
                 />
               </div>
               <div className="flex flex-col gap-1">
@@ -143,8 +142,7 @@ const Order = ({ data, onClose }) => {
                   // onChange={handleChange}
                   className="border-2 border-slate-500 rounded-lg p-1 text-sm sm:text-base placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   // placeholder="Enter the sku"
-                  aria-describedby="size-description"
-                  disabled={false}
+                  readOnly
                 />
               </div>
               <div className="flex flex-col gap-1">
@@ -161,8 +159,7 @@ const Order = ({ data, onClose }) => {
                   // onChange={handleChange}
                   className="border-2 border-slate-500 rounded-lg p-1 text-sm sm:text-base placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   // placeholder="Enter the sku"
-                  aria-describedby="size-description"
-                  disabled={false}
+                  readOnly
                 />
               </div>
               <div className="flex flex-col gap-1">
@@ -179,8 +176,7 @@ const Order = ({ data, onClose }) => {
                   // onChange={handleChange}
                   className="border-2 border-slate-500 rounded-lg p-1 text-sm sm:text-base placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   // placeholder="Enter the sku"
-                  aria-describedby="size-description"
-                  disabled={false}
+                  readOnly
                 />
               </div>
               <div className="flex flex-col gap-1">
@@ -197,8 +193,7 @@ const Order = ({ data, onClose }) => {
                   // onChange={handleChange}
                   className="border-2 border-slate-500 rounded-lg p-1 text-sm sm:text-base placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   // placeholder="Enter the sku"
-                  aria-describedby="price-description"
-                  disabled={false}
+                  readOnly
                 />
               </div>
               <div className="flex flex-col gap-1">
@@ -215,7 +210,6 @@ const Order = ({ data, onClose }) => {
                   onChange={handleChange}
                   className="border-2 border-slate-500 rounded-lg p-1 text-sm sm:text-base placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   // placeholder="Enter the sku"
-                  aria-describedby="price-description"
                 />
               </div>
               <div className="flex flex-col gap-1">
@@ -232,7 +226,6 @@ const Order = ({ data, onClose }) => {
                   onChange={handleChange}
                   className="border-2 border-slate-500 rounded-lg p-1 text-sm sm:text-base placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   // placeholder="Enter the sku"
-                  aria-describedby="price-description"
                 />
               </div>
 
@@ -253,86 +246,109 @@ const Order = ({ data, onClose }) => {
                 </button>
               </div>
             </div>
-            <div>
-              <div className="flex flex-col items-center space-y-4 p-6">
-                {/* Voucher Div */}
-                <div
-                  id="voucher-div"
-                  className="w-80 p-6 bg-white rounded-lg shadow-md border border-gray-200 "
-                >
-                  <div className="flex flex-row  justify-center items-center">
-                    <h2 className="text-1xl w-full font-bold text-gray-700">
-                      APK <br />T SHIRT
-                    </h2>
-                    <h2 className="text-4xl w-full font-bold text-gray-700">
-                      VOUCHER
-                    </h2>
-                  </div>
-                  <div className="flex flex-col justify-start">
-                    <p className="mt-2 text-sm text-gray-600">
-                      <span className="font-bold text-indigo-500">SKU : </span>
-                      {data.sku}
-                    </p>
-                    <p className="mt-2 text-sm text-gray-600">
-                      <span className="font-bold text-indigo-500">
-                        Product_Name :{" "}
-                      </span>
-                      {data.product_name}
-                    </p>
-                    <p className="mt-2 text-sm text-gray-600">
-                      <span className="font-bold text-indigo-500">
-                        Price :{" "}
-                      </span>
-                      {Number(data.price).toLocaleString()}/Ks
-                    </p>
-                    <p className="mt-2 text-sm text-gray-600">
-                      <span className="font-bold text-indigo-500">Size : </span>
-                      {data.size}
-                    </p>
-                    <p className="mt-2 text-sm text-gray-600">
-                      <span className="font-bold text-indigo-500">
-                        Color :{" "}
-                      </span>
-                      {data.color}
-                    </p>
-                    <p className="mt-2 text-sm text-gray-600">
-                      <span className="font-bold text-indigo-500">Qty : </span>
-                      {orderData.qty || 0}
-                    </p>
-                    <p className="mt-2 text-sm text-gray-600">
-                      <span className="font-bold text-indigo-500">
-                        Total :{" "}
-                      </span>
-                      {Number(orderData.qty * data.price).toLocaleString()}/Ks
-                      {/* Show 0 if qty is undefined */}
-                    </p>
-                    <p className="mt-2 text-sm text-gray-600">
-                      <span className="font-bold text-indigo-500">
-                        PromoPercentage:
-                      </span>
-                      {orderData.promoPercentage}%
-                      {/* Show 0 if qty is undefined */}
-                    </p>
-                    <p className="mt-2 text-sm text-gray-600">
-                      <span className="font-bold text-indigo-500">
-                        Actual Total Price:{" "}
-                      </span>
-                      {(
-                        Number(orderData.qty) *
-                        Number(data.price) *
-                        (1 - Number(orderData.promoPercentage || 0) / 100)
-                      ).toLocaleString()}
-                      /Ks
-                    </p>
-                    <p className="mt-2 text-sm text-gray-600">
-                      Use this code to get 50% off on your next purchase!
-                    </p>
+
+            {order && (
+              <div>
+                <div className="flex flex-col items-center space-y-4 p-6">
+                  {/* Voucher Div */}
+                  <div
+                    id="voucher-div"
+                    className="w-80 p-6 bg-white rounded-lg shadow-md border border-gray-200 "
+                  >
+                    <div className="flex flex-row  justify-center items-center">
+                      <h2 className="text-1xl w-full font-bold text-gray-700">
+                        APK <br />T SHIRT
+                      </h2>
+                      <h2 className="text-4xl w-full font-bold text-gray-700">
+                        VOUCHER
+                      </h2>
+                    </div>
+                    <div className="flex flex-col justify-start">
+                      <p className="mt-2 text-sm text-gray-600">
+                        <span className="font-bold text-indigo-500">
+                          SKU :{" "}
+                        </span>
+                        {data.sku}
+                      </p>
+                      <p className="mt-2 text-sm text-gray-600">
+                        <span className="font-bold text-indigo-500">
+                          Product_Name :{" "}
+                        </span>
+                        {data.product_name}
+                      </p>
+                      <p className="mt-2 text-sm text-gray-600">
+                        <span className="font-bold text-indigo-500">
+                          Price :{" "}
+                        </span>
+                        {Number(data.price).toLocaleString()}/Ks
+                      </p>
+                      <p className="mt-2 text-sm text-gray-600">
+                        <span className="font-bold text-indigo-500">
+                          Size :{" "}
+                        </span>
+                        {data.size}
+                      </p>
+                      <p className="mt-2 text-sm text-gray-600">
+                        <span className="font-bold text-indigo-500">
+                          Color :{" "}
+                        </span>
+                        {data.color}
+                      </p>
+                      <p className="mt-2 text-sm text-gray-600">
+                        <span className="font-bold text-indigo-500">
+                          Qty :{" "}
+                        </span>
+                        {orderData.qty || 0}
+                      </p>
+                      <p className="mt-2 text-sm text-gray-600">
+                        <span className="font-bold text-indigo-500">
+                          Total :{" "}
+                        </span>
+                        {Number(orderData.qty * data.price).toLocaleString()}/Ks
+                        {/* Show 0 if qty is undefined */}
+                      </p>
+                      <p className="mt-2 text-sm text-gray-600">
+                        <span className="font-bold text-indigo-500">
+                          PromoPercentage:
+                        </span>
+                        {orderData.promoPercentage}%
+                        {/* Show 0 if qty is undefined */}
+                      </p>
+                      <p className="mt-2 text-sm text-gray-600">
+                        <span className="font-bold text-indigo-500">
+                          Actual Total Price:{" "}
+                        </span>
+                        {(
+                          Number(orderData.qty) *
+                          Number(data.price) *
+                          (1 - Number(orderData.promoPercentage || 0) / 100)
+                        ).toLocaleString()}
+                        /Ks
+                      </p>
+
+                      <p className="mt-2 text-sm text-gray-600">
+                        <span className="font-bold text-indigo-500">
+                          Order By <br />
+                        </span>
+                        {userData.name}
+                        <br />
+                        <span className="font-bold text-indigo-500">
+                          Date <br />
+                        </span>
+                        <span className="font-bold text-indigo-500">
+                          {new Date().toLocaleDateString()} &nbsp;{" "}
+                          {new Date().toLocaleTimeString("en-US", {
+                            hour12: false,
+                          })}
+                        </span>
+                      </p>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              {/* make me image  and pdf filew */}
-            </div>
+                {/* make me image  and pdf filew */}
+              </div>
+            )}
           </div>
         </div>
       </div>

@@ -119,7 +119,7 @@ const Product = () => {
     }, 5000);
 
     return () => clearTimeout(timer);
-  }, [currentPage, rowsPerPage, isError, fetchData]);
+  }, [currentPage, rowsPerPage, isError]);
 
   return (
     <>

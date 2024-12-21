@@ -1,12 +1,53 @@
+import axios from "axios";
+import { useAuth } from "../../../AuthContext";
+import { useEffect, useState } from "react";
+
 /* eslint-disable react/prop-types */
-export const SaleProductDetail = ({ data, onClose }) => {
-  console.log("Data : ", data);
+export const SaleProductDetail = ({ data, onClose, check }) => {
+  const { accessToken } = useAuth();
+  const [showError, setShowError] = useState("");
+  const [isError, setIsError] = useState(false);
+  const [codeStatus, setCodeStatus] = useState(null);
+
+  const action = async (order_status) => {
+    const serverDomain = import.meta.env.VITE_SERVER_DOMAIN;
+    let result;
+
+    result = await axios.post(
+      `${serverDomain}/lego/order/action`,
+      {
+        id: data.id,
+        order: order_status,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    console.log("reuslt : ", result);
+    if (result.data.code != "200") {
+      setShowError(result.data.message);
+      setIsError(true);
+    }
+    setCodeStatus(result.data.code);
+  };
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsError(false);
+      setShowError("");
+      setCodeStatus(null);
+    }, 5000);
+
+    return () => clearTimeout(timer);
+  }, [showError, isError]);
 
   return (
     <>
       <div className="absolute inset-0 bg-gray-900 bg-opacity-50 flex items-center h-full justify-center z-50 overflow-auto">
         <div className="flex flex-col bg-white p-6 rounded-lg shadow-lg  gap-1 max-h-full overflow-auto">
-          <h2 className="text-2xl font-bold mb-4">Product Details</h2>
+          <h2 className="text-2xl font-bold mb-4">Product Details{check}</h2>
 
           {/* First Row */}
           <div className="flex flex-col flex-wrap sm:flex-row md:flex-row gap-1 shrink-0 overflow-hidden max-w-full">
@@ -30,54 +71,65 @@ export const SaleProductDetail = ({ data, onClose }) => {
             </div>
           </div>
           {/* Second Row */}
-          <div className="flex flex-col flex-wrap sm:flex-row md:flex-row gap-1 shrink-0 overflow-hidden max-w-full">
-            <div className="flex flex-row flex-wrap border-2 border-slate-500 rounded-md p-1 shrink-0 overflow-hidden max-w-full">
-              <label htmlFor="id" className="shrink-0 text-base font-medium">
-                From Production:
-              </label>
-              <p>{data.stock_from_production}</p>
+          {check === true ? (
+            ""
+          ) : (
+            <div className="flex flex-col flex-wrap sm:flex-row md:flex-row gap-1 shrink-0 overflow-hidden max-w-full">
+              <div className="flex flex-row flex-wrap border-2 border-slate-500 rounded-md p-1 shrink-0 overflow-hidden max-w-full">
+                <label htmlFor="id" className="shrink-0 text-base font-medium">
+                  From Production:
+                </label>
+                <p>{data.stock_from_production}</p>
+              </div>
+              <div className="flex flex-row flex-wrap border-2 border-slate-500 rounded-md p-1 shrink-0 overflow-hidden max-w-full">
+                <label htmlFor="id" className="shrink-0 text-base font-medium">
+                  Initial Stock :
+                </label>
+                <p>{data.initial_stock}</p>
+              </div>
             </div>
-            <div className="flex flex-row flex-wrap border-2 border-slate-500 rounded-md p-1 shrink-0 overflow-hidden max-w-full">
-              <label htmlFor="id" className="shrink-0 text-base font-medium">
-                Initial Stock :
-              </label>
-              <p>{data.initial_stock}</p>
-            </div>
-          </div>
+          )}
 
-          <div className="flex flex-col flex-wrap sm:flex-row md:flex-row gap-1 shrink-0 overflow-hidden max-w-full">
-            <div className="flex flex-row flex-wrap border-2 border-green-500 rounded-md p-1 shrink-0 overflow-hidden max-w-full bg-green-500 ">
-              <label htmlFor="id" className="shrink-0 text-base font-medium">
-                Available :
-              </label>
-              <p>{data.stock_available}</p>
-            </div>
-            <div className="flex flex-row flex-wrap border-2 border-slate-500 rounded-md p-1 shrink-0 overflow-hidden max-w-full bg-slate-500 text-white">
-              <label htmlFor="id" className="shrink-0 text-base font-medium">
-                Adjustment :
-              </label>
-              <p>{data.stock_adjustment}</p>
-            </div>
-            <div className="flex flex-row flex-wrap border-2 border-yellow-500 rounded-md p-1 shrink-0 overflow-hidden max-w-full bg-yellow-500 ">
-              <label htmlFor="id" className="shrink-0 text-base font-medium">
-                InOrder :
-              </label>
-              <p> {data.stock_inorder}</p>
-            </div>
+          {/*Third Row*/}
+          {check === true ? (
+            ""
+          ) : (
+            <div className="flex flex-col flex-wrap sm:flex-row md:flex-row gap-1 shrink-0 overflow-hidden max-w-full">
+              <div className="flex flex-row flex-wrap border-2 border-green-500 rounded-md p-1 shrink-0 overflow-hidden max-w-full bg-green-500 ">
+                <label htmlFor="id" className="shrink-0 text-base font-medium">
+                  Available :
+                </label>
+                <p>{data.stock_available}</p>
+              </div>
+              <div className="flex flex-row flex-wrap border-2 border-slate-500 rounded-md p-1 shrink-0 overflow-hidden max-w-full bg-slate-500 text-white">
+                <label htmlFor="id" className="shrink-0 text-base font-medium">
+                  Adjustment :
+                </label>
+                <p>{data.stock_adjustment}</p>
+              </div>
+              <div className="flex flex-row flex-wrap border-2 border-yellow-500 rounded-md p-1 shrink-0 overflow-hidden max-w-full bg-yellow-500 ">
+                <label htmlFor="id" className="shrink-0 text-base font-medium">
+                  InOrder :
+                </label>
+                <p> {data.stock_inorder}</p>
+              </div>
 
-            <div className="flex flex-row flex-wrap border-2 border-red-500 rounded-md p-1 shrink-0 overflow-hidden max-w-full bg-red-500 text-white">
-              <label htmlFor="id" className="shrink-0 text-base font-medium">
-                SoldOut :
-              </label>
-              <p>{data.stock_soldout}</p>
+              <div className="flex flex-row flex-wrap border-2 border-red-500 rounded-md p-1 shrink-0 overflow-hidden max-w-full bg-red-500 text-white">
+                <label htmlFor="id" className="shrink-0 text-base font-medium">
+                  SoldOut :
+                </label>
+                <p>{data.stock_soldout}</p>
+              </div>
+              <div className="flex flex-row flex-wrap border-2 border-amber-500 rounded-md p-1 shrink-0 overflow-hidden max-w-full bg-amber-500">
+                <label htmlFor="id" className="shrink-0 text-base font-medium">
+                  On Hold :
+                </label>
+                <p>{data.stock_onhold}</p>
+              </div>
             </div>
-            <div className="flex flex-row flex-wrap border-2 border-amber-500 rounded-md p-1 shrink-0 overflow-hidden max-w-full bg-amber-500">
-              <label htmlFor="id" className="shrink-0 text-base font-medium">
-                On Hold :
-              </label>
-              <p>{data.stock_onhold}</p>
-            </div>
-          </div>
+          )}
+
+          {/*Fourth Row*/}
 
           <div className="flex flex-col flex-wrap sm:flex-row md:flex-row gap-1 shrink-0 overflow-hidden max-w-full">
             <div className="flex flex-row flex-wrap border-2 border-slate-500 rounded-md p-1 shrink-0 overflow-hidden max-w-full">
@@ -106,6 +158,39 @@ export const SaleProductDetail = ({ data, onClose }) => {
               <p>{data.remarks}</p>
             </div>
           </div>
+
+          {check === true ? (
+            <div className="flex flex-col flex-wrap sm:flex-row md:flex-row gap-1 shrink-0 overflow-hidden max-w-full">
+              <div className="flex flex-row flex-wrap bg-yellow-300 border border-yellow-400 rounded-md p-1 shrink-0 overflow-hidden max-w-full">
+                <label htmlFor="id" className="shrink-0 text-base font-medium">
+                  OrderBy :
+                </label>
+                <p>{data.user}</p>
+              </div>
+              {data.approveBy == null ? (
+                ""
+              ) : (
+                <div
+                  className={`flex flex-row flex-wrap ${
+                    data.status == "reject"
+                      ? "bg-red-300"
+                      : "bg-green-300"
+                  } border border-green-400 rounded-md p-1 shrink-0 overflow-hidden max-w-full`}
+                >
+                  <label
+                    htmlFor="id"
+                    className="shrink-0 text-base font-medium"
+                  >
+                    Action By :
+                  </label>
+                  <p>{data.approve_user}</p>
+                </div>
+              )}
+            </div>
+          ) : (
+            ""
+          )}
+
           <div className="flex flex-col flex-wrap sm:flex-row md:flex-row gap-1 shrink-0 overflow-hidden max-w-full">
             <div className="flex rounded-md border border-indigo-500 bg-gray-50 p-1 shadow-md w-48 h-52 items-center justify-center relative">
               <img
@@ -137,13 +222,53 @@ export const SaleProductDetail = ({ data, onClose }) => {
               />
             </div>
           </div>
+          <div className="flex justify-center items-center p-2">
+            <p
+              className={`${
+                isError == "" ? "hide" : "block"
+              } font-medium border rounded-md ${
+                codeStatus == "green"
+                  ? "text-green-500 bg-green-100"
+                  : "text-red-500 bg-red-100"
+              }`}
+            >
+              {showError}
+            </p>
+          </div>
 
-          <button
-            onClick={onClose}
-            className="mt-4 bg-blue-500 text-white px-4 py-2 w-24 rounded hover:bg-blue-600"
-          >
-            Close
-          </button>
+          {check === true && data.approveBy == null ? (
+            <div className="flex flex-row gap-2">
+              <button
+                onClick={() => {
+                  action(true);
+                }}
+                className="mt-4 bg-green-600 text-white px-4 py-2 w-auto text-xl text-semibold rounded hover:bg-green-800"
+              >
+                <i className="fa-solid fa-check"></i>
+              </button>
+              <button
+                onClick={() => {
+                  action(false);
+                }}
+                className="mt-4 bg-red-400 text-white px-4 py-2 w-auto text-xl text-semibold rounded hover:bg-red-600"
+              >
+                <i className="fa-solid fa-x"></i>
+              </button>
+              <button
+                onClick={onClose}
+                className="mt-4 bg-blue-500 text-white px-4 py-2 w-auto rounded hover:bg-blue-600"
+              >
+                Close
+              </button>
+            </div>
+          ) : (
+            <button
+              onClick={onClose}
+              className="mt-4 bg-blue-500 text-white px-4 py-2 w-24 rounded hover:bg-blue-600"
+            >
+              Close
+            </button>
+          )}
         </div>
       </div>
     </>

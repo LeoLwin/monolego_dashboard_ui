@@ -218,7 +218,7 @@ const OurProducts = () => {
           </p>
         </div>
         {showDetails && detailsData && (
-          <SaleProductDetail data={detailsData} onClose={closeDetails} />
+          <SaleProductDetail data={detailsData} onClose={closeDetails} check={false} />
         )}
 
         {showOrder && detailsData && (

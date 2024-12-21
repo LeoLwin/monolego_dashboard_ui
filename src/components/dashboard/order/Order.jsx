@@ -59,6 +59,7 @@ const Order = ({ data, onClose, order }) => {
       if (result.data.code == "200") {
         setCode("green");
         downloadAsImage();
+        setShowError(result.data.message);
       } else {
         setCode("red");
       }
@@ -246,6 +247,8 @@ const Order = ({ data, onClose, order }) => {
                 </button>
               </div>
             </div>
+
+            
 
             {order && (
               <div>

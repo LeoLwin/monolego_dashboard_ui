@@ -24,7 +24,7 @@ const Table = ({
   // const currentRows = data.slice(indexOfFirstRow, indexOfLastRow);
   const currentRows = data;
 
-  console.log("currentRows", currentRows);
+  // console.log("currentRows", currentRows);
 
   // Calculate total pages
   const totalPages = Math.ceil(totalData / pageLimit);
@@ -49,11 +49,12 @@ const Table = ({
   // Update page limit dynamically
   useEffect(() => {
     setPageLimit(rowsPerPage);
-  }, [rowsPerPage, data]);
+  }, [rowsPerPage]);
 
   useEffect(() => {
     setCurrentPage(initialPage);
   }, [initialPage]);
+  console.log("columns : ", columns);
 
   // Handle delete confirmation
   const handleDeleteConfirmation = (confirm) => {
@@ -88,11 +89,17 @@ const Table = ({
         </thead>
         <tbody>
           {currentRows.map((row, index) => (
-            <tr key={index} className="hover:bg-gray-100">
+            <tr
+              key={index}
+              className={`hover:bg-gray-200 
+                ${row.status == "reject" ? "bg-red-300 m-2" : ""} 
+                ${row.status == "soldout" ? "bg-green-300 m-2" : ""}
+                ${row.status == "pending" ? "bg-yellow-300 m-2" : ""} `}
+            >
               {columns.map((column) => (
                 <td
                   key={column.accessor}
-                  className="px-2 sm:px-4 py-2 border-b border-slate-400"
+                  className={`px-2 sm:px-4 py-2 border-b border-slate-400 `}
                 >
                   {row[column.accessor]}
                 </td>

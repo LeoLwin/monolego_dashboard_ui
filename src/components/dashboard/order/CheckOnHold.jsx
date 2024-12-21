@@ -24,7 +24,7 @@ const CheckOnHold = () => {
     { Header: "Size", accessor: "size" },
     { Header: "Color", accessor: "color" },
     { Header: "Qty", accessor: "qty" },
-    { Header: "HoldBy", accessor: "user" },
+    { Header: "HoldBy   ", accessor: "user" },
     { Header: "Status", accessor: "status" },
     { Header: "OrderDate", accessor: "created_at" },
   ];

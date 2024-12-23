@@ -3,6 +3,7 @@ import { useAuth } from "../../../AuthContext";
 import axios from "axios";
 import Table from "../../../Table";
 import { SaleProductDetail } from "./SaleProductDetail";
+import ConfirmationModal from "../../models/ConfirmationModal";
 
 const CheckOnHold = () => {
   const { accessToken, userData } = useAuth();
@@ -14,6 +15,7 @@ const CheckOnHold = () => {
   const [detailsData, setDetailsData] = useState(null);
   // eslint-disable-next-line no-unused-vars
   const [totalPages, setTotalPages] = useState(1); // Total pages
+  const [showModal, setShowModal] = useState(false);
   // eslint-disable-next-line no-unused-vars
   const [status, setStatus] = useState(null);
   const columns = [
@@ -40,7 +42,7 @@ const CheckOnHold = () => {
         status,
       };
       const result = await axios.post(
-        `${serverDomain}/lego/order/getOrderList`,
+        `${serverDomain}/lego/order/getOnHoldList`,
         payload,
         {
           headers: {
@@ -69,6 +71,7 @@ const CheckOnHold = () => {
     }
   };
 
+  // eslint-disable-next-line no-unused-vars
   const onActionClick = async (row, actionType) => {
     try {
       setDetailsData(row);
@@ -93,6 +96,14 @@ const CheckOnHold = () => {
 
   return (
     <>
+      <ConfirmationModal
+        isOpen={showModal}
+        onClose={() => setShowModal(false)}
+        onConfirm={() => {
+          // saveOrder();
+          setShowModal(false);
+        }}
+      />
       {userData.role === "admin" && (
         <div className="flex flex-col items-center h-full shrink">
           <div className="flex justify-center items-center p-5">

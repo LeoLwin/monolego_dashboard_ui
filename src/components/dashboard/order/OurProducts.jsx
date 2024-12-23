@@ -16,6 +16,7 @@ const OurProducts = () => {
   const [showError, setShowError] = useState("");
   const [isError, setIsError] = useState(false);
   const [order, setOrder] = useState(true);
+  const [header, setHeader] = useState("");
   // eslint-disable-next-line no-unused-vars
   const [codeStatus, setCodeStatus] = useState("");
   const [showSearch, setShowSearch] = useState(false);
@@ -218,11 +219,20 @@ const OurProducts = () => {
           </p>
         </div>
         {showDetails && detailsData && (
-          <SaleProductDetail data={detailsData} onClose={closeDetails} check={false} />
+          <SaleProductDetail
+            data={detailsData}
+            onClose={closeDetails}
+            check={false}
+          />
         )}
 
         {showOrder && detailsData && (
-          <Order data={detailsData} onClose={closeOrder} order={order} />
+          <Order
+            data={detailsData}
+            onClose={closeOrder}
+            order={order}
+            head={header}
+          />
         )}
 
         <div className="flex flex-row mt-10 w-full mb-2 w-auto sm:w-full items-start justify-start  sm:mt-10 md:mt-10 lg:mt-0">
@@ -363,6 +373,7 @@ const OurProducts = () => {
                     <button
                       className="border-2 border-blue-500 rounded-md text-sm w-16 text-center text-blue-500 font-bold hover:ring-2 hover:ring-blue-300"
                       onClick={() => {
+                        setHeader("ORDER");
                         openOrder(item, true);
                       }}
                     >
@@ -373,6 +384,7 @@ const OurProducts = () => {
                     <button
                       className="border-2 border-orange-500 rounded-md text-sm w-16 text-center text-orange-500 font-bold hover:ring-2 hover:ring-orange-300"
                       onClick={() => {
+                        setHeader("HOLD");
                         openOrder(item, false);
                       }}
                     >

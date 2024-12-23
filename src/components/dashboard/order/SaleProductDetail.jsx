@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useAuth } from "../../../AuthContext";
 import { useEffect, useState } from "react";
+import ConfirmationModal from "../../models/ConfirmationModal";
 
 /* eslint-disable react/prop-types */
 export const SaleProductDetail = ({ data, onClose, check }) => {
@@ -8,6 +9,8 @@ export const SaleProductDetail = ({ data, onClose, check }) => {
   const [showError, setShowError] = useState("");
   const [isError, setIsError] = useState(false);
   const [codeStatus, setCodeStatus] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [actionStatus, setActionStatus] = useState(false);
 
   const action = async (order_status) => {
     const serverDomain = import.meta.env.VITE_SERVER_DOMAIN;
@@ -26,11 +29,16 @@ export const SaleProductDetail = ({ data, onClose, check }) => {
       }
     );
     console.log("reuslt : ", result);
+
     if (result.data.code != "200") {
       setShowError(result.data.message);
       setIsError(true);
     }
     setCodeStatus(result.data.code);
+  };
+
+  const handleDoneClick = () => {
+    setShowModal(true); // Open the modal
   };
 
   useEffect(() => {
@@ -47,7 +55,16 @@ export const SaleProductDetail = ({ data, onClose, check }) => {
     <>
       <div className="absolute inset-0 bg-gray-900 bg-opacity-50 flex items-center h-full justify-center z-50 overflow-auto">
         <div className="flex flex-col bg-white p-6 rounded-lg shadow-lg  gap-1 max-h-full overflow-auto">
-          <h2 className="text-2xl font-bold mb-4">Product Details{check}</h2>
+          <h2 className="text-2xl font-bold mb-4">Product Details</h2>
+
+          <ConfirmationModal
+            isOpen={showModal}
+            onClose={() => setShowModal(false)}
+            onConfirm={() => {
+              action(actionStatus);
+              setShowModal(false);
+            }}
+          />
 
           {/* First Row */}
           <div className="flex flex-col flex-wrap sm:flex-row md:flex-row gap-1 shrink-0 overflow-hidden max-w-full">
@@ -172,9 +189,7 @@ export const SaleProductDetail = ({ data, onClose, check }) => {
               ) : (
                 <div
                   className={`flex flex-row flex-wrap ${
-                    data.status == "reject"
-                      ? "bg-red-300"
-                      : "bg-green-300"
+                    data.status == "reject" ? "bg-red-300" : "bg-green-300"
                   } border border-green-400 rounded-md p-1 shrink-0 overflow-hidden max-w-full`}
                 >
                   <label
@@ -240,7 +255,9 @@ export const SaleProductDetail = ({ data, onClose, check }) => {
             <div className="flex flex-row gap-2">
               <button
                 onClick={() => {
-                  action(true);
+                  // action(true);
+                  setActionStatus(true);
+                  handleDoneClick();
                 }}
                 className="mt-4 bg-green-600 text-white px-4 py-2 w-auto text-xl text-semibold rounded hover:bg-green-800"
               >
@@ -248,7 +265,9 @@ export const SaleProductDetail = ({ data, onClose, check }) => {
               </button>
               <button
                 onClick={() => {
-                  action(false);
+                  // action(false);
+                  setActionStatus(false);
+                  handleDoneClick();
                 }}
                 className="mt-4 bg-red-400 text-white px-4 py-2 w-auto text-xl text-semibold rounded hover:bg-red-600"
               >

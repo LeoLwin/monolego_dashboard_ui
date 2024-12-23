@@ -6,7 +6,7 @@ import { useAuth } from "../../../AuthContext";
 import ConfirmationModal from "../../models/ConfirmationModal";
 
 /* eslint-disable react/prop-types */
-const Order = ({ data, onClose, order }) => {
+const Order = ({ data, onClose, order, head }) => {
   const { accessToken, userData } = useAuth();
   const [showError, setShowError] = useState("");
   const [code, setCode] = useState("");
@@ -99,7 +99,7 @@ const Order = ({ data, onClose, order }) => {
     <>
       <div className="absolute inset-0 bg-gray-900 bg-opacity-50 flex items-center h-full justify-center z-50 h-screen overflow-auto">
         <div className="flex flex-col bg-white p-6 rounded-lg shadow-lg  gap-1 max-h-full overflow-auto">
-          <h2 className="text-2xl font-bold mb-4">ORDER</h2>
+          <h2 className="text-2xl font-bold mb-4">{head}</h2>
           <ConfirmationModal
             isOpen={showModal}
             onClose={() => setShowModal(false)}
@@ -247,8 +247,6 @@ const Order = ({ data, onClose, order }) => {
                 </button>
               </div>
             </div>
-
-            
 
             {order && (
               <div>

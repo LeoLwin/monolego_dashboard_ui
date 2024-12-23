@@ -138,7 +138,8 @@ const Menubar = ({ onMenuClick, onProductClick }) => {
             }}
           >
             {/* <i className="fa-solid fa-arrow-right-arrow-left text-xl"></i> */}
-            <i className="fas fa-shopping-bag text-xl"></i>
+            <i className="fas fa-shopping-cart"></i>
+
             <span className="hidden sm:block md:block font-bold text-lg">
               Check Orders
             </span>
@@ -160,8 +161,7 @@ const Menubar = ({ onMenuClick, onProductClick }) => {
               showButtonAction(6);
             }}
           >
-            {/* <i className="fa-solid fa-arrow-right-arrow-left text-xl"></i> */}
-            <i className="fas fa-shopping-bag text-xl"></i>
+            <i className="fa-solid fa-hand-holding"></i>
             <span className="hidden sm:block md:block font-bold text-lg">
               Check Holders
             </span>

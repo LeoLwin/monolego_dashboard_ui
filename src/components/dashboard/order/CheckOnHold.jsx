@@ -6,7 +6,7 @@ import { SaleProductDetail } from "./SaleProductDetail";
 import ConfirmationModal from "../../models/ConfirmationModal";
 
 const CheckOnHold = () => {
-  const { accessToken, userData } = useAuth();
+  const { accessToken } = useAuth();
   const [currentPage, setCurrentPage] = useState(1); // Current page
   const [rowsPerPage] = useState(10); // Rows per page
   const [data, setData] = useState([]);
@@ -96,38 +96,56 @@ const CheckOnHold = () => {
 
   return (
     <>
-      <ConfirmationModal
-        isOpen={showModal}
-        onClose={() => setShowModal(false)}
-        onConfirm={() => {
-          // saveOrder();
-          setShowModal(false);
-        }}
-      />
-      {userData.role === "admin" && (
-        <div className="flex flex-col items-center h-full shrink">
-          <div className="flex justify-center items-center p-5">
-            <h3 className="text-xl sm:text-3xl md:text2xl font-extrabold shrink tracking-wide">
-              ORDER LIST
-            </h3>
-          </div>
-          {showDetails && detailsData && (
-            <SaleProductDetail
-              data={detailsData}
-              onClose={closeDetails}
-              check={true}
-            />
-          )}
-          <Table
-            columns={columns}
-            data={data}
-            rowsPerPage={rowsPerPage}
-            initialPage={currentPage}
-            onPageChange={handlePageChange}
-            totalData={totalData}
-            Action={{ detail: true, edit: false, delete: false, action: true }}
-            onActionClick={onActionClick} // Notify parent on page change
+      {data.length > 0 ? (
+        <div>
+          <ConfirmationModal
+            isOpen={showModal}
+            onClose={() => setShowModal(false)}
+            onConfirm={() => {
+              // saveOrder();
+              setShowModal(false);
+            }}
           />
+
+          <div className="flex flex-col items-center h-full shrink">
+            <div className="flex justify-center items-center p-5">
+              <h3 className="text-xl sm:text-3xl md:text2xl font-extrabold shrink tracking-wide">
+                HOLD LIST
+              </h3>
+            </div>
+            {showDetails && detailsData && (
+              <SaleProductDetail
+                data={detailsData}
+                onClose={closeDetails}
+                check={true}
+              />
+            )}
+            <Table
+              columns={columns}
+              data={data}
+              rowsPerPage={rowsPerPage}
+              initialPage={currentPage}
+              onPageChange={handlePageChange}
+              totalData={totalData}
+              Action={{
+                detail: true,
+                edit: false,
+                delete: false,
+                action: true,
+              }}
+              onActionClick={onActionClick} // Notify parent on page change
+            />
+          </div>
+        </div>
+      ) : (
+        <div className="flex flex-col justify-center items-center space-y-4 p-6 bg-gray-100 border h-full rounded-lg shadow-md">
+          <p className="text-lg font-semibold text-gray-800">
+            No Available Products
+          </p>
+          <p className="text-sm text-gray-600">
+            We&lsquo;re sorry, but it looks like there are no products available
+            at the moment. Please check back later.
+          </p>
         </div>
       )}
     </>

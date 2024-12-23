@@ -12,15 +12,11 @@ export const AuthProvider = ({ children }) => {
   const [userData, setUserData] = useState(null);
 
   // Function to log in
-  const login = (token) => {
+  const login = (token, userData) => {
     console.log("Context Token : ", token);
     setAccessToken(token); // Save the access token
     setIsAuthenticated(true); // Set the authentication status to true
-    setUserData({
-      id: 1,
-      name: "Kaung Htet Lwin",
-      role: "admin",
-    });
+    setUserData(userData);
     console.log("isAuthenticated : ", isAuthenticated);
   };
 

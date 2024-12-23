@@ -93,7 +93,11 @@ const Table = ({
               key={index}
               className={`hover:bg-gray-200 
                 ${row.status == "reject" ? "bg-red-300 m-2" : ""} 
-                ${row.status == "soldout" ? "bg-green-300 m-2" : ""}
+                ${
+                  row.status == "soldout" || row.status == "approve"
+                    ? "bg-green-300 m-2"
+                    : ""
+                }
                 ${row.status == "pending" ? "bg-yellow-300 m-2" : ""} `}
             >
               {columns.map((column) => (

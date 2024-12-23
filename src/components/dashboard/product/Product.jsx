@@ -123,53 +123,65 @@ const Product = () => {
 
   return (
     <>
-      <div className="flex flex-col items-center h-full shrink">
-        <h3 className="text-xl sm:text-3xl md:text2xl font-extrabold shrink tracking-wide">
-          {showAdd ? "ADD PRODUCT" : "PRODUCT LIST"}
-        </h3>
-        <div className="flex justify-end w-full mb-1 ">
-          <div className="lg:px-10 sm:justify-end md:justify-end">
-            <div
-              className="text-3xl font-extrabold border-2 border-slate-500 rounded w-12 text-center shrink  justify-center 
+      {data.length > 0 ? (
+        <div className="flex flex-col items-center h-full shrink">
+          <h3 className="text-xl sm:text-3xl md:text2xl font-extrabold shrink tracking-wide">
+            {showAdd ? "ADD PRODUCT" : "PRODUCT LIST"}
+          </h3>
+          <div className="flex justify-end w-full mb-1 ">
+            <div className="lg:px-10 sm:justify-end md:justify-end">
+              <div
+                className="text-3xl font-extrabold border-2 border-slate-500 rounded w-12 text-center shrink  justify-center 
             transition-all duration-300 ease-out-in hover:bg-blue-400 hover:text-white hover:scale-105 hover:border-0"
-              onClick={handleShowProductToggle}
-            >
-              {showAdd ? (
-                <i className="fa-solid fa-arrow-left"></i>
-              ) : (
-                <i className="fa-solid fa-plus"></i>
-              )}
+                onClick={handleShowProductToggle}
+              >
+                {showAdd ? (
+                  <i className="fa-solid fa-arrow-left"></i>
+                ) : (
+                  <i className="fa-solid fa-plus"></i>
+                )}
+              </div>
             </div>
           </div>
+          <div className="flex justify-center items-center">
+            <p
+              className={`${
+                isError == "" ? "hide" : "block"
+              } font-medium border rounded-md ${
+                codeStatus == "green"
+                  ? "text-green-500 bg-green-100"
+                  : "text-red-500 bg-red-100"
+              }`}
+            >
+              {showError}
+            </p>
+          </div>
+          {showAdd ? (
+            <AddProduct data={editData} editAble={editAble} />
+          ) : (
+            <Table
+              columns={columns}
+              data={data}
+              rowsPerPage={rowsPerPage}
+              initialPage={currentPage}
+              onPageChange={handlePageChange}
+              totalData={totalData}
+              Action={{ detail: false, edit: true, delete: true, action: true }}
+              onActionClick={onActionClick} // Notify parent on page change
+            />
+          )}
         </div>
-        <div className="flex justify-center items-center">
-          <p
-            className={`${
-              isError == "" ? "hide" : "block"
-            } font-medium border rounded-md ${
-              codeStatus == "green"
-                ? "text-green-500 bg-green-100"
-                : "text-red-500 bg-red-100"
-            }`}
-          >
-            {showError}
+      ) : (
+        <div className="flex flex-col justify-center items-center space-y-4 p-6 bg-gray-100 border h-full rounded-lg shadow-md">
+          <p className="text-lg font-semibold text-gray-800">
+            No Available Products
+          </p>
+          <p className="text-sm text-gray-600">
+            We&lsquo;re sorry, but it looks like there are no products available
+            at the moment. Please check back later.
           </p>
         </div>
-        {showAdd ? (
-          <AddProduct data={editData} editAble={editAble} />
-        ) : (
-          <Table
-            columns={columns}
-            data={data}
-            rowsPerPage={rowsPerPage}
-            initialPage={currentPage}
-            onPageChange={handlePageChange}
-            totalData={totalData}
-            Action={{ detail: false, edit: true, delete: true, action: true }}
-            onActionClick={onActionClick} // Notify parent on page change
-          />
-        )}
-      </div>
+      )}
     </>
   );
 };

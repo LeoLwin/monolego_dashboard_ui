@@ -28,9 +28,12 @@ const Login = () => {
         email,
         password,
       });
-
+      // console.log(result.data);
+      // console.log(result.data.data.token);
+      // console.log(result.data.data.userData);
+      // return;
       if (result.data.code === "200") {
-        login(result.data.data);
+        login(result.data.data.token, result.data.data.userData);
         navigate("/dashboard");
       } else {
         setShowError(result.data.message || "Login failed. Please try again.");

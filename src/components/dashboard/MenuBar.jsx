@@ -123,50 +123,50 @@ const Menubar = ({ onMenuClick, onProductClick }) => {
           </span>
         </div>
 
-        {userData.role === "admin" && (
-          <div
-            className={`flex flex-row gap-2 text-xl h-10 lg:p-5 ml-2 border-2 rounded border-black items-center shrink lg:justify-start justify-center 
+        {/* {userData.role === "admin" && ( */}
+        <div
+          className={`flex flex-row gap-2 text-xl h-10 lg:p-5 ml-2 border-2 rounded border-black items-center shrink lg:justify-start justify-center 
           transition-all duration-300 ease-in-out hover:bg-blue-400 hover:text-white hover:scale-105 hover:border-0 ${
             showButton === 5 ? "bg-blue-500 text-white scale-105 border-0" : ""
           }`}
-            onClick={() => {
-              if (window.innerWidth < 1024) {
-                onMenuClick(); // Toggle sidebar on small screens
-              }
-              onProductClick(5); // Set view to Product
-              showButtonAction(5);
-            }}
-          >
-            {/* <i className="fa-solid fa-arrow-right-arrow-left text-xl"></i> */}
-            <i className="fas fa-shopping-cart"></i>
+          onClick={() => {
+            if (window.innerWidth < 1024) {
+              onMenuClick(); // Toggle sidebar on small screens
+            }
+            onProductClick(5); // Set view to Product
+            showButtonAction(5);
+          }}
+        >
+          {/* <i className="fa-solid fa-arrow-right-arrow-left text-xl"></i> */}
+          <i className="fas fa-shopping-cart"></i>
 
-            <span className="hidden sm:block md:block font-bold text-lg">
-              Check Orders
-            </span>
-          </div>
-        )}
+          <span className="hidden sm:block md:block font-bold text-lg">
+            Check Orders
+          </span>
+        </div>
+        {/* )} */}
 
         {/* CheckOnHold */}
-        {userData.role === "admin" && (
-          <div
-            className={`flex flex-row gap-2 text-xl h-10 lg:p-5 ml-2 border-2 rounded border-black items-center shrink lg:justify-start justify-center 
+        {/* {userData.role === "admin" && ( */}
+        <div
+          className={`flex flex-row gap-2 text-xl h-10 lg:p-5 ml-2 border-2 rounded border-black items-center shrink lg:justify-start justify-center 
           transition-all duration-300 ease-in-out hover:bg-blue-400 hover:text-white hover:scale-105 hover:border-0 ${
             showButton === 6 ? "bg-blue-500 text-white scale-105 border-0" : ""
           }`}
-            onClick={() => {
-              if (window.innerWidth < 1024) {
-                onMenuClick(); // Toggle sidebar on small screens
-              }
-              onProductClick(6); // Set view to Product
-              showButtonAction(6);
-            }}
-          >
-            <i className="fa-solid fa-hand-holding"></i>
-            <span className="hidden sm:block md:block font-bold text-lg">
-              Check Holders
-            </span>
-          </div>
-        )}
+          onClick={() => {
+            if (window.innerWidth < 1024) {
+              onMenuClick(); // Toggle sidebar on small screens
+            }
+            onProductClick(6); // Set view to Product
+            showButtonAction(6);
+          }}
+        >
+          <i className="fa-solid fa-hand-holding"></i>
+          <span className="hidden sm:block md:block font-bold text-lg">
+            Check Holders
+          </span>
+        </div>
+        {/* )} */}
       </div>
     </>
   );

@@ -190,66 +190,67 @@ const Transaction = () => {
 
   return (
     <>
-      <div className="flex flex-col items-center h-full shrink">
-        <h3 className="text-xl sm:text-3xl md:text2xl font-extrabold shrink tracking-wide">
-          {showAdd ? "In/Out Transaction" : "TRANSACTION LIST"}
-        </h3>
-        <div className="flex justify-end w-full mb-1 ">
-          <div className="lg:px-10 sm:justify-end md:justify-end">
-            <div
-              className="text-3xl font-extrabold border-2 border-slate-500 rounded w-12 text-center shrink  justify-center 
+      {data.length > 0 ? (
+        <div className="flex flex-col items-center h-full shrink">
+          <h3 className="text-xl sm:text-3xl md:text2xl font-extrabold shrink tracking-wide">
+            {showAdd ? "In/Out Transaction" : "TRANSACTION LIST"}
+          </h3>
+          <div className="flex justify-end w-full mb-1 ">
+            <div className="lg:px-10 sm:justify-end md:justify-end">
+              <div
+                className="text-3xl font-extrabold border-2 border-slate-500 rounded w-12 text-center shrink  justify-center 
             transition-all duration-300 ease-out-in hover:bg-blue-400 hover:text-white hover:scale-105 hover:border-0"
-              onClick={handleShowProductToggle}
-            >
-              {showAdd ? (
-                <i className="fa-solid fa-arrow-left"></i>
-              ) : (
-                <i className="fa-solid fa-recycle"></i>
-              )}
+                onClick={handleShowProductToggle}
+              >
+                {showAdd ? (
+                  <i className="fa-solid fa-arrow-left"></i>
+                ) : (
+                  <i className="fa-solid fa-recycle"></i>
+                )}
+              </div>
             </div>
           </div>
-        </div>
-        <div className="flex justify-center items-center p-2">
-          <p
-            className={`${
-              isError == "" ? "hide" : "block"
-            } font-medium border rounded-md ${
-              codeStatus == "green"
-                ? "text-green-500 bg-green-100"
-                : "text-red-500 bg-red-100"
-            }`}
-          >
-            {showError}
-          </p>
-        </div>
+          <div className="flex justify-center items-center p-2">
+            <p
+              className={`${
+                isError == "" ? "hide" : "block"
+              } font-medium border rounded-md ${
+                codeStatus == "green"
+                  ? "text-green-500 bg-green-100"
+                  : "text-red-500 bg-red-100"
+              }`}
+            >
+              {showError}
+            </p>
+          </div>
 
-        {!showAdd ? (
-          <div className="flex flex-col sm:flex-row shrink mb-1">
-            <select
-              name="key"
-              id="key"
-              value={searchData.key}
-              onChange={handleChange}
-              className="
+          {!showAdd ? (
+            <div className="flex flex-col sm:flex-row shrink mb-1">
+              <select
+                name="key"
+                id="key"
+                value={searchData.key}
+                onChange={handleChange}
+                className="
             rounded-l-md w-52 sm:w-24 md:w-24
             sm:border-2 md:border-2 lg:border-2  
             border-slate-500 mb-1"
-            >
-              <option value="" disabled>
-                Select
-              </option>
-              <option value="sku">SKU</option>
-              <option value="transaction_date">Tr Date</option>
-              <option value="transaction_type">Tr Type</option>
-              <option value="created_at">Created_at</option>
-            </select>
-            <input
-              type="text"
-              name="value"
-              id="color"
-              value={searchData.value}
-              onChange={handleChange}
-              className="
+              >
+                <option value="" disabled>
+                  Select
+                </option>
+                <option value="sku">SKU</option>
+                <option value="transaction_date">Tr Date</option>
+                <option value="transaction_type">Tr Type</option>
+                <option value="created_at">Created_at</option>
+              </select>
+              <input
+                type="text"
+                name="value"
+                id="color"
+                value={searchData.value}
+                onChange={handleChange}
+                className="
               border-2 sm:border-2 md:border-2 
               sm:rounded-md md:rounded-md rounded-md
               lg:border-t-2 lg:border-b-2 lg:rounded-none lg:border-0
@@ -257,45 +258,59 @@ const Transaction = () => {
               text-sm sm:text-base 
               placeholder-gray-400 
               focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 mb-1"
-              placeholder="Enter what you want to search"
-              aria-describedby="Search"
-            />
-            <div className="flex fexl-col justify-center items-center">
-              <button
-                type="submit"
-                onClick={searchButton}
-                className="border-2 border-slate-500 rounded-md sm:rounded-md md:rounded-md lg:rounded-r-md xl:rounded-r-md w-52 sm:w-20 md:w-20 p-2 bg-blue-500 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 mb-1"
-              >
-                Search
-              </button>
-              <div
-                onClick={refresh}
-                className="m-2 text-2xl font-extrabold  text-center shrink  justify-center items-center
+                placeholder="Enter what you want to search"
+                aria-describedby="Search"
+              />
+              <div className="flex fexl-col justify-center items-center">
+                <button
+                  type="submit"
+                  onClick={searchButton}
+                  className="border-2 border-slate-500 rounded-md sm:rounded-md md:rounded-md lg:rounded-r-md xl:rounded-r-md w-52 sm:w-20 md:w-20 p-2 bg-blue-500 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 mb-1"
+                >
+                  Search
+                </button>
+                <div
+                  onClick={refresh}
+                  className="m-2 text-2xl font-extrabold  text-center shrink  justify-center items-center
             transition-all duration-500 ease-out-in  hover:scale-105 "
-              >
-                <i className="fa-solid fa-arrows-rotate"></i>
+                >
+                  <i className="fa-solid fa-arrows-rotate"></i>
+                </div>
               </div>
             </div>
-          </div>
-        ) : (
-          ""
-        )}
+          ) : (
+            ""
+          )}
 
-        {showAdd ? (
-          <InputTransaction data={editData} editAble={editAble} />
-        ) : (
-          <Table
-            columns={columns}
-            data={data}
-            rowsPerPage={rowsPerPage}
-            initialPage={currentPage}
-            onPageChange={handlePageChange}
-            totalData={totalData}
-            Action={{ detail: false, edit: true, delete: false, action: true }}
-            onActionClick={onActionClick} // Notify parent on page change
-          />
-        )}
-      </div>
+          {showAdd ? (
+            <InputTransaction data={editData} editAble={editAble} />
+          ) : (
+            <Table
+              columns={columns}
+              data={data}
+              rowsPerPage={rowsPerPage}
+              initialPage={currentPage}
+              onPageChange={handlePageChange}
+              totalData={totalData}
+              Action={{
+                detail: false,
+                edit: true,
+                delete: false,
+                action: true,
+              }}
+              onActionClick={onActionClick} // Notify parent on page change
+            />
+          )}
+        </div>
+      ) : (
+        <div className="flex flex-col justify-center items-center space-y-4 p-6 bg-gray-100 border h-full rounded-lg shadow-md">
+          <p className="text-lg font-semibold text-gray-800">No Data Found. </p>
+          <p className="text-sm text-gray-600">
+            We&lsquo;re sorry, but it looks like there are no transactions
+            available at the moment. Please check back later.
+          </p>
+        </div>
+      )}
     </>
   );
 };

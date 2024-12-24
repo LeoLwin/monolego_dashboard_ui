@@ -53,7 +53,6 @@ const Order = ({ data, onClose, order, head }) => {
           },
         }
       );
-
       console.log("Result :", result.data);
       console.log("Result :", result.data.code);
       if (result.data.code == "200") {

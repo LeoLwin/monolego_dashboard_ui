@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { useAuth } from "../../AuthContext";
+import ConfirmationModal from "../models/ConfirmationModal";
 
 // eslint-disable-next-line react/prop-types
 const Menubar = ({ onMenuClick, onProductClick }) => {
   const [showButton, setShowButton] = useState("");
-  const { userData } = useAuth();
+  const [showModal, setShowModal] = useState(false);
+  const { userData, logout } = useAuth();
   console.log(userData);
   const showButtonAction = (data) => {
     setShowButton(data);
@@ -12,7 +14,30 @@ const Menubar = ({ onMenuClick, onProductClick }) => {
   };
   return (
     <>
-      <div className="h-20 flex items-center justify-center shrink mt-5">
+      {showModal && (
+        <div className="">
+          <ConfirmationModal
+            isOpen={showModal}
+            onClose={() => setShowModal(false)}
+            onConfirm={() => {
+              logout();
+            }}
+            message={"Log out?"}
+          />
+        </div>
+      )}
+      <div className="flex justify-end">
+        <div
+          className="p-1 hover:bg-black hover:text-white rounded-full"
+          onClick={() => {
+            setShowModal(true);
+          }}
+        >
+          <i className="fas fa-power-off"></i>
+        </div>
+      </div>
+
+      <div className="h-20 flex items-center justify-center shrink mt-3">
         <h3 className="text-xl sm:text-4xl md:text-3xl font-extrabold shrink tracking-widest">
           MENU
         </h3>

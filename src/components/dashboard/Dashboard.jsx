@@ -51,14 +51,14 @@ const Dashboard = () => {
         >
           {/* Button to toggle sidebar visibility on small screens */}
           <button
-            className={`p-2 bg-slate-800 w-8 h-8 duration-300 absolute rounded-md mt-2 ml-2 top-5 left-5 lg:hidden ${
+            className={`p-2 bg-white-800 w-8 h-8 duration-300 absolute rounded-md mt-2 ml-2 top-5 left-5 lg:hidden ${
               isSidebarVisible
-                ? "bg-white duration-300 bg-white-400 bg-blue-400 left-10"
-                : "bg-blue-500"
+                ? "bg-white duration-300 bg-white-400 bg-white-400 left-10"
+                : "bg-white-500"
             }`}
             onClick={toggleSidebar}
           >
-            <div className="flex flex-col gap-1 items-center">
+            {/* <div className="flex flex-col gap-1 items-center">
               <span
                 className={`block w-6 h-0.5 ${
                   isSidebarVisible ? "bg-white" : "bg-blue-100"
@@ -74,7 +74,8 @@ const Dashboard = () => {
                   isSidebarVisible ? "bg-white" : "bg-blue-100"
                 } rounded-md`}
               ></span>
-            </div>
+            </div> */}
+            <i className="fa-solid fa-bars"></i>
           </button>
 
           <div className="p-3 w-full h-full">

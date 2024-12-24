@@ -26,6 +26,7 @@ const CheckOrders = () => {
     { Header: "Color", accessor: "color" },
     { Header: "Qty", accessor: "qty" },
     { Header: "Orderby", accessor: "user" },
+    { Header: "OrderType", accessor: "order_type" },
     { Header: "%", accessor: "promoPercentage" },
     { Header: "Total", accessor: "totalAmount" },
     { Header: "Status", accessor: "status" },
@@ -98,7 +99,7 @@ const CheckOrders = () => {
   return (
     <>
       {data.length > 0 ? (
-        <div className="flex flex-col items-center h-full shrink">
+        <div className="flex flex-col items-center h-full shrink overflow-x-auto">
           <div className="flex justify-center items-center p-5">
             <h3 className="text-xl sm:text-3xl md:text2xl font-extrabold shrink tracking-wide">
               ORDER LIST

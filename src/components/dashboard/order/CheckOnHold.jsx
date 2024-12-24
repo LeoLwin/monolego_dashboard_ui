@@ -26,6 +26,10 @@ const CheckOnHold = () => {
     { Header: "Size", accessor: "size" },
     { Header: "Color", accessor: "color" },
     { Header: "Qty", accessor: "qty" },
+    { Header: "Total_qty", accessor: "total_qty" },
+    // total_qty
+    // tranaction_type
+    { Header: "Type", accessor: "tranaction_type" },
     { Header: "HoldBy   ", accessor: "user" },
     { Header: "Status", accessor: "status" },
     { Header: "OrderDate", accessor: "created_at" },
@@ -107,7 +111,7 @@ const CheckOnHold = () => {
             }}
           />
 
-          <div className="flex flex-col items-center h-full shrink">
+          <div className="flex flex-col items-center h-full shrink overflow-x-auto">
             <div className="flex justify-center items-center p-5">
               <h3 className="text-xl sm:text-3xl md:text2xl font-extrabold shrink tracking-wide">
                 HOLD LIST

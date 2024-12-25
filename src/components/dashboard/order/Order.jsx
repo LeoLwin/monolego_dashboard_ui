@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import axios from "axios";
@@ -10,6 +10,7 @@ const Order = ({ data, onClose, order, head }) => {
   const { accessToken, userData } = useAuth();
   const [showError, setShowError] = useState("");
   const [code, setCode] = useState("");
+  const [isError, setIsError] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [orderData, setOrderData] = useState({
     id: "",
@@ -29,6 +30,7 @@ const Order = ({ data, onClose, order, head }) => {
   const handleDoneClick = () => {
     setShowModal(true); // Open the modal
   };
+
   const saveOrder = async () => {
     try {
       // if (!areAllFieldsValid()) {
@@ -59,8 +61,14 @@ const Order = ({ data, onClose, order, head }) => {
         setCode("green");
         downloadAsImage();
         setShowError(result.data.message);
+        setOrderData({
+          qty: "",
+          order: order,
+          promoPercentage: 0,
+        });
       } else {
         setCode("red");
+        setShowError(result.data.message);
       }
       setShowError(result.data.message);
 
@@ -81,6 +89,7 @@ const Order = ({ data, onClose, order, head }) => {
     });
   };
 
+  // eslint-disable-next-line no-unused-vars
   const downloadAsPDF = () => {
     const element = document.getElementById("voucher-div");
     html2canvas(element).then((canvas) => {
@@ -93,6 +102,15 @@ const Order = ({ data, onClose, order, head }) => {
       pdf.save("voucher.pdf");
     });
   };
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsError(false);
+      setShowError("");
+    }, 5000);
+
+    return () => clearTimeout(timer);
+  });
 
   return (
     <>
@@ -227,6 +245,20 @@ const Order = ({ data, onClose, order, head }) => {
                   className="border-2 border-slate-500 rounded-lg p-1 text-sm sm:text-base placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   // placeholder="Enter the sku"
                 />
+              </div>
+
+              <div className="flex justify-center items-center p-2">
+                <p
+                  className={`${
+                    isError == "" ? "hide" : "block"
+                  } font-medium border rounded-md ${
+                    code == "green"
+                      ? "text-green-500 bg-green-100"
+                      : "text-red-500 bg-red-100"
+                  }`}
+                >
+                  {showError}
+                </p>
               </div>
 
               <div className="flex gap-5 w-full shrink justify-start mt-1">

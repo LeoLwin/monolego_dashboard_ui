@@ -178,7 +178,7 @@ const Transaction = () => {
   };
 
   useEffect(() => {
-    console.log(searchData);
+    // console.log(searchData);
     fetchData(currentPage, rowsPerPage);
     const timer = setTimeout(() => {
       setIsError(false);
@@ -186,7 +186,7 @@ const Transaction = () => {
     }, 5000);
 
     return () => clearTimeout(timer);
-  }, [currentPage, rowsPerPage, isError, searchData]);
+  }, [currentPage, rowsPerPage, isError]);
 
   return (
     <>

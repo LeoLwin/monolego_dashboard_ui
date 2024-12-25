@@ -27,8 +27,16 @@ const Menubar = ({ onMenuClick, onProductClick }) => {
         </div>
       )}
       <div className="flex justify-end">
+        <div className="flex flex-col w-full">
+          <p className="w-full text-center justify-center font-bold uppercase">
+            {userData.username}
+          </p>
+          <p className="w-full text-center justify-center font-bold uppercase">
+            {userData.role_name}
+          </p>
+        </div>
         <div
-          className="p-1 hover:bg-black hover:text-white rounded-full"
+          className="p-1 hover:bg-black hover:text-white rounded-full h-8"
           onClick={() => {
             setShowModal(true);
           }}
@@ -66,7 +74,7 @@ const Menubar = ({ onMenuClick, onProductClick }) => {
         </div>
 
         {/* Product Menu */}
-        <div
+        {userData.role_name === "admin" &&<div
           className={`flex flex-row gap-2 text-xl h-10 lg:p-5 ml-2 border-2 rounded border-black items-center shrink lg:justify-start justify-center 
             transition-all duration-300 ease-in-out hover:bg-blue-400 hover:text-white hover:scale-105 hover:border-0 ${
               showButton === 1
@@ -83,9 +91,9 @@ const Menubar = ({ onMenuClick, onProductClick }) => {
         >
           <i className="fa-solid fa-shirt mt-1"></i>
           <span className="hidden sm:block md:block font-bold">Product</span>
-        </div>
+        </div>}
         {/* Product Menu */}
-        <div
+        {userData.role_name === "admin" && <div
           className={`flex flex-row gap-2 text-xl h-10 lg:p-5 ml-2 border-2 rounded border-black items-center shrink lg:justify-start justify-center 
             transition-all duration-300 ease-in-out hover:bg-blue-400 hover:text-white hover:scale-105 hover:border-0 ${
               showButton === 2
@@ -104,9 +112,9 @@ const Menubar = ({ onMenuClick, onProductClick }) => {
           <span className="hidden sm:block md:block font-bold">
             Transaction
           </span>
-        </div>
+        </div>}
         {/* Saleable Products */}
-        <div
+        {userData.role_name === "admin" &&<div
           className={`flex flex-row gap-2 text-xl h-10 lg:p-5 ml-2 border-2 rounded border-black items-center shrink lg:justify-start justify-center 
             transition-all duration-300 ease-in-out hover:bg-blue-400 hover:text-white hover:scale-105 hover:border-0 ${
               showButton === 3
@@ -126,7 +134,7 @@ const Menubar = ({ onMenuClick, onProductClick }) => {
           <span className="hidden sm:block md:block font-bold text-lg">
             Saleable Products
           </span>
-        </div>
+        </div>}
 
         <div
           className={`flex flex-row gap-2 text-xl h-10 lg:p-5 ml-2 border-2 rounded border-black items-center shrink lg:justify-start justify-center 

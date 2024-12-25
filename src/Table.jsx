@@ -145,23 +145,28 @@ const Table = ({
           ))}
         </tbody>
       </table>
-
-      <div className="mt-4 flex flex-row justify-center items-center space-y-2 sm:space-y-0 sm:space-x-2 shrink">
-        <button
-          onClick={() => onPageChange(currentPage - 1)}
-          disabled={currentPage === 1}
-          className="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          Prev
-        </button>
-        <span className="px-4 py-2 text-center">{`Page ${currentPage} of ${totalPages}`}</span>
-        <button
-          onClick={() => onPageChange(currentPage + 1)}
-          disabled={currentPage === totalPages}
-          className="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          Next
-        </button>
+      <div className="flex flex-col md:flex-row sm:flex-row mt-4 flex items-center w-full">
+      <span className="flex text-center basis-1/5 font-bold">{`TOTAL : ${totalData}`}</span>
+        <div className=" flex flex-col justify-center items-center space-y-2 sm:space-y-0 basis-3/5 w-full">
+          {/* <p className="text-lg font-medium">{`Total: ${totalData}`}</p> */}
+          <div className="flex flex-row justify-center items-center space-x-2">
+            <button
+              onClick={() => onPageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+              className="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Prev
+            </button>
+            <span className="px-4 py-2 text-center">{`Page ${currentPage} of ${totalPages}`}</span>
+            <button
+              onClick={() => onPageChange(currentPage + 1)}
+              disabled={currentPage === totalPages}
+              className="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Next
+            </button>
+          </div>
+        </div>
       </div>
 
       {showConfirm && (

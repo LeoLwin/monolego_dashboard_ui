@@ -18,9 +18,18 @@ const CheckOnHold = () => {
   const [showModal, setShowModal] = useState(false);
   // eslint-disable-next-line no-unused-vars
   const [status, setStatus] = useState(null);
+  const [showSearch, setShowSearch] = useState(false);
+  const [showError, setShowError] = useState("");
+  const [isError, setIsError] = useState(false);
+  const [codeStatus, setCodeStatus] = useState("");
+
+  const [searchData, setSearchData] = useState({
+    sku: "",
+    product_name: "",
+  });
   const columns = [
     // { Header: "ID", accessor: "id" },
-    { Header: "SKU", accessor: "sku" },
+    // { Header: "SKU", accessor: "sku" },
     { Header: "Name", accessor: "product_name" },
     { Header: "Price", accessor: "price" },
     { Header: "Size", accessor: "size" },
@@ -35,7 +44,42 @@ const CheckOnHold = () => {
     { Header: "OrderDate", accessor: "created_at" },
   ];
 
-  const fetchData = async (page = currentPage, limit = rowsPerPage, status) => {
+  const searchButton = async () => {
+    try {
+      const filledFields = Object.values(searchData).filter(
+        (value) => value.trim() !== ""
+      ).length;
+
+      // Validate that only one field is filled
+      if (filledFields > 1) {
+        setShowError("Only one field can be used for searching at a time.");
+        return;
+      }
+
+      if (filledFields === 0) {
+        setShowError("Please enter a value to search.");
+        return;
+      }
+      await fetchData(
+        currentPage,
+        rowsPerPage,
+        status,
+        searchData.sku == "" ? null : searchData.sku,
+        searchData.product_name == "" ? null : searchData.sku
+      );
+      // showSearchBar(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const fetchData = async (
+    page = currentPage,
+    limit = rowsPerPage,
+    status,
+    sku = null,
+    product_name = null
+  ) => {
     try {
       // console.log("Page : ", page, "And Limit : ", limit);
       const serverDomain = import.meta.env.VITE_SERVER_DOMAIN;
@@ -44,7 +88,10 @@ const CheckOnHold = () => {
         current: page,
         limit,
         status,
+        sku,
+        product_name,
       };
+      console.log("PayLoad : ", payload);
       const result = await axios.post(
         `${serverDomain}/lego/order/getOnHoldList`,
         payload,
@@ -54,15 +101,16 @@ const CheckOnHold = () => {
           },
         }
       );
-      // console.log("Result :", result.data.data);
+      console.log("Result :", result);
       // console.log("Code : ", result.data.code);
       // console.log("Total : ", result.data.data.pagination.total);
       if (result.data.code != 200) {
         // setData(result.data.data);
 
         // console.log("Total : ", result.data.data.pagination.total);
-        // setIsError(true);
-        // setShowError(result.data.message);
+        setIsError(true);
+        setShowError(result.data.message);
+        setCodeStatus("red");
         return;
       }
       setData(result.data.data.by);
@@ -94,14 +142,112 @@ const CheckOnHold = () => {
     setCurrentPage(page); // Update current page when Table notifies
   };
 
+  const showSearchBar = (data) => {
+    setShowSearch(data);
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setSearchData((prevData) => ({
+      ...prevData,
+      [name]: value, // Use the name of the field to update the specific property
+    }));
+    console.log("SearchData : ", searchData);
+  };
+
   useEffect(() => {
     fetchData(currentPage, rowsPerPage, status);
-  }, []);
+    const timer = setTimeout(() => {
+      setIsError(false);
+      setShowError("");
+    }, 5000);
+
+    return () => clearTimeout(timer);
+  }, [currentPage, rowsPerPage, status, isError, showError]);
+
+  const refresh = async () => {
+    await fetchData(1, rowsPerPage);
+    setSearchData({
+      sku: "",
+      product_name: "",
+    });
+    setShowSearch(false);
+    setIsError(false);
+    setShowError("");
+  };
 
   return (
     <>
       {data.length > 0 ? (
-        <div>
+        <div className="flex flex-col items-center h-full shrink overflow-x-auto">
+          <div className="flex justify-center items-center">
+            <p
+              className={`${
+                isError == "" ? "hide" : "block"
+              } font-medium border rounded-md ${
+                codeStatus == "green"
+                  ? "text-green-500 bg-green-100"
+                  : "text-red-500 bg-red-100"
+              }`}
+            >
+              {showError}
+            </p>
+          </div>
+          <div className="flex flex-row mt-10 w-full mb-2 w-auto sm:w-full items-start justify-start  sm:mt-10 md:mt-10 lg:mt-0">
+            <div
+              onClick={() => {
+                showSearchBar(true);
+              }}
+              onDoubleClick={() => {
+                showSearchBar(false);
+              }}
+              className="border rounded-full w-8 h-8 hover:ring-2 hover:ring-slate-300 flex items-center justify-center "
+            >
+              <i className="fa-solid fa-magnifying-glass"></i>
+            </div>
+            <div
+              className={`${
+                showSearch ? "flex flex-row" : "hidden"
+              } flex-row flex-wrap w-full gap-2 p-1  justify-start`}
+            >
+              <div className="flex flex-row items-center justify-start">
+                <input
+                  type="text"
+                  name="sku"
+                  value={searchData.sku}
+                  className="border-b-2 text-center w-24"
+                  onChange={handleChange}
+                  placeholder="SKU"
+                />
+              </div>
+              <div className="flex flex-row items-center justify-start mr-5">
+                <input
+                  type="text"
+                  name="product_name"
+                  value={searchData.product_name}
+                  className="border-b-2 text-center w-28"
+                  onChange={handleChange}
+                  placeholder="Product Name"
+                />
+              </div>
+              <button
+                className="rounded-md text-sm w-8 bg-teal-500  text-center text-white font-bold hover:ring-2 hover:ring-teal-300"
+                onClick={() => {
+                  searchButton();
+                }}
+              >
+                <i className="fa-solid fa-check"></i>
+              </button>
+              <button
+                className="rounded-md text-sm w-8 bg-teal-500  text-center text-white font-bold hover:ring-2 hover:ring-teal-300"
+                onClick={() => {
+                  refresh();
+                }}
+              >
+                <i className="fa-solid fa-arrows-rotate"></i>
+              </button>
+            </div>
+          </div>
           <ConfirmationModal
             isOpen={showModal}
             onClose={() => setShowModal(false)}
@@ -110,36 +256,35 @@ const CheckOnHold = () => {
               setShowModal(false);
             }}
           />
-
-          <div className="flex flex-col items-center h-full shrink overflow-x-auto">
-            <div className="flex justify-center items-center p-5">
-              <h3 className="text-xl sm:text-3xl md:text2xl font-extrabold shrink tracking-wide">
-                HOLD LIST
-              </h3>
-            </div>
-            {showDetails && detailsData && (
-              <SaleProductDetail
-                data={detailsData}
-                onClose={closeDetails}
-                check={true}
-              />
-            )}
-            <Table
-              columns={columns}
-              data={data}
-              rowsPerPage={rowsPerPage}
-              initialPage={currentPage}
-              onPageChange={handlePageChange}
-              totalData={totalData}
-              Action={{
-                detail: true,
-                edit: false,
-                delete: false,
-                action: true,
-              }}
-              onActionClick={onActionClick} // Notify parent on page change
-            />
+          <div className="flex justify-center items-center p-5">
+            <h3 className="text-xl sm:text-3xl md:text-2xl font-extrabold tracking-wide">
+              HOLD LIST
+            </h3>
           </div>
+          {showDetails && detailsData && (
+            <SaleProductDetail
+              data={detailsData}
+              onClose={closeDetails}
+              check={true}
+              order={false}
+            />
+          )}
+
+          <Table
+            columns={columns}
+            data={data}
+            rowsPerPage={rowsPerPage}
+            initialPage={currentPage}
+            onPageChange={handlePageChange}
+            totalData={totalData}
+            Action={{
+              detail: true,
+              edit: false,
+              delete: false,
+              action: true,
+            }}
+            onActionClick={onActionClick} // Notify parent on page change
+          />
         </div>
       ) : (
         <div className="flex flex-col justify-center items-center space-y-4 p-6 bg-gray-100 border h-full rounded-lg shadow-md">

@@ -5,7 +5,7 @@ import Table from "../../../Table";
 import { SaleProductDetail } from "./SaleProductDetail";
 
 const CheckOrders = () => {
-  const { accessToken, userData } = useAuth();
+  const { accessToken } = useAuth();
   const [currentPage, setCurrentPage] = useState(1); // Current page
   const [rowsPerPage] = useState(10); // Rows per page
   const [data, setData] = useState([]);
@@ -16,10 +16,19 @@ const CheckOrders = () => {
   const [totalPages, setTotalPages] = useState(1); // Total pages
   // eslint-disable-next-line no-unused-vars
   const [status, setStatus] = useState(null);
+  const [showSearch, setShowSearch] = useState(false);
+  const [showError, setShowError] = useState("");
+  const [isError, setIsError] = useState(false);
+  const [codeStatus, setCodeStatus] = useState("");
+
+  const [searchData, setSearchData] = useState({
+    sku: "",
+    product_name: "",
+  });
 
   const columns = [
     // { Header: "ID", accessor: "id" },
-    { Header: "SKU", accessor: "sku" },
+    // { Header: "SKU", accessor: "sku" },
     { Header: "Name", accessor: "product_name" },
     { Header: "Price", accessor: "price" },
     { Header: "Size", accessor: "size" },
@@ -33,7 +42,42 @@ const CheckOrders = () => {
     { Header: "OrderDate", accessor: "created_at" },
   ];
 
-  const fetchData = async (page = currentPage, limit = rowsPerPage, status) => {
+  const searchButton = async () => {
+    try {
+      const filledFields = Object.values(searchData).filter(
+        (value) => value.trim() !== ""
+      ).length;
+
+      // Validate that only one field is filled
+      if (filledFields > 1) {
+        setShowError("Only one field can be used for searching at a time.");
+        return;
+      }
+
+      if (filledFields === 0) {
+        setShowError("Please enter a value to search.");
+        return;
+      }
+      await fetchData(
+        currentPage,
+        rowsPerPage,
+        status,
+        searchData.sku == "" ? null : searchData.sku,
+        searchData.product_name == "" ? null : searchData.sku
+      );
+      // showSearchBar(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const fetchData = async (
+    page = currentPage,
+    limit = rowsPerPage,
+    status,
+    sku = null,
+    product_name = null
+  ) => {
     try {
       // console.log("Page : ", page, "And Limit : ", limit);
       const serverDomain = import.meta.env.VITE_SERVER_DOMAIN;
@@ -42,7 +86,10 @@ const CheckOrders = () => {
         current: page,
         limit,
         status,
+        sku,
+        product_name,
       };
+      console.log("PayLoad : ", payload);
       const result = await axios.post(
         `${serverDomain}/lego/order/getOrderList`,
         payload,
@@ -92,14 +139,93 @@ const CheckOrders = () => {
     setCurrentPage(page); // Update current page when Table notifies
   };
 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setSearchData((prevData) => ({
+      ...prevData,
+      [name]: value, // Use the name of the field to update the specific property
+    }));
+    console.log("SearchData : ", searchData);
+  };
+
+  const showSearchBar = (data) => {
+    setShowSearch(data);
+  };
+
+  const refresh = async () => {
+    await fetchData(1, rowsPerPage);
+    setSearchData({
+      sku: "",
+      product_name: "",
+    });
+    setShowSearch(false);
+    setIsError(false);
+    setShowError("");
+  };
+
   useEffect(() => {
     fetchData(currentPage, rowsPerPage, status);
-  }, []);
+  }, [currentPage, rowsPerPage, status]);
 
   return (
     <>
       {data.length > 0 ? (
         <div className="flex flex-col items-center h-full shrink overflow-x-auto">
+          <div className="flex flex-row mt-10 w-full mb-2 w-auto sm:w-full items-start justify-start  sm:mt-10 md:mt-10 lg:mt-0">
+            <div
+              onClick={() => {
+                showSearchBar(true);
+              }}
+              onDoubleClick={() => {
+                showSearchBar(false);
+              }}
+              className="border rounded-full w-8 h-8 hover:ring-2 hover:ring-slate-300 flex items-center justify-center "
+            >
+              <i className="fa-solid fa-magnifying-glass"></i>
+            </div>
+            <div
+              className={`${
+                showSearch ? "flex flex-row" : "hidden"
+              } flex-row flex-wrap w-full gap-2 p-1  justify-start`}
+            >
+              <div className="flex flex-row items-center justify-start">
+                <input
+                  type="text"
+                  name="sku"
+                  value={searchData.sku}
+                  className="border-b-2 text-center w-24"
+                  onChange={handleChange}
+                  placeholder="SKU"
+                />
+              </div>
+              <div className="flex flex-row items-center justify-start mr-5">
+                <input
+                  type="text"
+                  name="product_name"
+                  value={searchData.product_name}
+                  className="border-b-2 text-center w-28"
+                  onChange={handleChange}
+                  placeholder="Product Name"
+                />
+              </div>
+              <button
+                className="rounded-md text-sm w-8 bg-teal-500  text-center text-white font-bold hover:ring-2 hover:ring-teal-300"
+                onClick={() => {
+                  searchButton();
+                }}
+              >
+                <i className="fa-solid fa-check"></i>
+              </button>
+              <button
+                className="rounded-md text-sm w-8 bg-teal-500  text-center text-white font-bold hover:ring-2 hover:ring-teal-300"
+                onClick={() => {
+                  refresh();
+                }}
+              >
+                <i className="fa-solid fa-arrows-rotate"></i>
+              </button>
+            </div>
+          </div>
           <div className="flex justify-center items-center p-5">
             <h3 className="text-xl sm:text-3xl md:text2xl font-extrabold shrink tracking-wide">
               ORDER LIST
@@ -110,6 +236,7 @@ const CheckOrders = () => {
               data={detailsData}
               onClose={closeDetails}
               check={true}
+              order={true}
             />
           )}
           <Table

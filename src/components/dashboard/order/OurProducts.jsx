@@ -442,7 +442,7 @@ const OurProducts = () => {
             No Available Products
           </p>
           <p className="text-sm text-gray-600">
-            We're sorry, but it looks like there are no products available at
+            We&apos;re sorry, but it looks like there are no products available at
             the moment. Please check back later.
           </p>
         </div>

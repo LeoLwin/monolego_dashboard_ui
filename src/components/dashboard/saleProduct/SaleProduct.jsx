@@ -95,7 +95,7 @@ const SaleProduct = () => {
   };
 
   const productEdit = async (data) => {
-    console.log("ProductEdit data  : ", data);
+    // console.log("ProductEdit data  : ", data);
     setEditData(data);
     setShowAdd(true);
     setEditAble(true);

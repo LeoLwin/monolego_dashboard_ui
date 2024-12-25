@@ -4,37 +4,73 @@ import { useEffect, useState } from "react";
 import ConfirmationModal from "../../models/ConfirmationModal";
 
 /* eslint-disable react/prop-types */
-export const SaleProductDetail = ({ data, onClose, check }) => {
-  const { accessToken } = useAuth();
+export const SaleProductDetail = ({ data, onClose, check, order = null }) => {
+  const { accessToken, userData } = useAuth();
   const [showError, setShowError] = useState("");
   const [isError, setIsError] = useState(false);
-  const [codeStatus, setCodeStatus] = useState(null);
+  const [code, setCode] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [actionStatus, setActionStatus] = useState(false);
+  // console.log("UserData : ", userData);
+  // console.log("Data : ", data);
+  // console.log("data.approveBy : ", data.approveBy);
+  // console.log("serData.id : ", userData.id);
+  // console.log("data.holdBy : ", data.holdBy);
+  // console.log("userData.id == data.holdBy : ", userData.user_id == data.holdBy);
+  // console.log("action :", order);
 
   const action = async (order_status) => {
+    if (typeof order_status !== "boolean") {
+      setShowError("Invalid input: order_status must be a boolean.");
+      setIsError(true);
+    }
+    // console.log("order_status :",  {
+    //   id: data.id,
+    //   order: order_status,
+    // },);
+    // return;
     const serverDomain = import.meta.env.VITE_SERVER_DOMAIN;
     let result;
-
-    result = await axios.post(
-      `${serverDomain}/lego/order/action`,
-      {
-        id: data.id,
-        order: order_status,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
+    if (order) {
+      console.log("Order");
+      result = await axios.post(
+        `${serverDomain}/lego/order/action`,
+        {
+          id: data.id,
+          status: order_status,
         },
-      }
-    );
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+    } else {
+      // holdAction
+      console.log("Hold");
+      result = await axios.post(
+        `${serverDomain}/lego/order/holdAction`,
+        {
+          id: data.id,
+          status: order_status,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+    }
     console.log("reuslt : ", result);
 
     if (result.data.code != "200") {
       setShowError(result.data.message);
       setIsError(true);
+      setCode("green");
     }
-    setCodeStatus(result.data.code);
+    setCode("red");
+    setShowError(result.data.message);
+    setCode(result.data.code);
   };
 
   const handleDoneClick = () => {
@@ -45,7 +81,7 @@ export const SaleProductDetail = ({ data, onClose, check }) => {
     const timer = setTimeout(() => {
       setIsError(false);
       setShowError("");
-      setCodeStatus(null);
+      setCode(null);
     }, 5000);
 
     return () => clearTimeout(timer);
@@ -242,7 +278,7 @@ export const SaleProductDetail = ({ data, onClose, check }) => {
               className={`${
                 isError == "" ? "hide" : "block"
               } font-medium border rounded-md ${
-                codeStatus == "green"
+                code == "green"
                   ? "text-green-500 bg-green-100"
                   : "text-red-500 bg-red-100"
               }`}
@@ -251,7 +287,9 @@ export const SaleProductDetail = ({ data, onClose, check }) => {
             </p>
           </div>
 
-          {check === true && data.approveBy == null ? (
+          {check === true &&
+          data.approveBy == null &&
+          userData.role_name === "admin" ? (
             <div className="flex flex-row gap-2">
               <button
                 onClick={() => {

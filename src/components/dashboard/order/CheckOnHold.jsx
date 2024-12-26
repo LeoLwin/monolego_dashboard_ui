@@ -248,6 +248,7 @@ const CheckOnHold = () => {
               </button>
             </div>
           </div>
+          {/* <i class="fa-solid fa-arrow-right-arrow-left"></i> */}
           <ConfirmationModal
             isOpen={showModal}
             onClose={() => setShowModal(false)}

@@ -408,7 +408,7 @@ const OurProducts = () => {
             })}
           </div>
 
-          <div className="flex flex-row gap-2 mt-4">
+          <div className="flex flex-row gap-2 mt-2">
             <button
               className={`px-3 py-1 rounded-md ${
                 currentPage === 1
@@ -442,8 +442,8 @@ const OurProducts = () => {
             No Available Products
           </p>
           <p className="text-sm text-gray-600">
-            We&apos;re sorry, but it looks like there are no products available at
-            the moment. Please check back later.
+            We&apos;re sorry, but it looks like there are no products available
+            at the moment. Please check back later.
           </p>
         </div>
       )}

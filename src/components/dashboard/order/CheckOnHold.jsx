@@ -153,7 +153,7 @@ const CheckOnHold = () => {
     }, 5000);
     console.log("SearchData : ", searchData);
     return () => clearTimeout(timer);
-  }, [currentPage, rowsPerPage, status, isError, showError, searchData]);
+  }, [currentPage, rowsPerPage, status, isError, showError, searchData, data]);
 
   const refresh = async () => {
     await fetchData(1, rowsPerPage);

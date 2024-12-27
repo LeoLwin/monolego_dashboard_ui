@@ -25,6 +25,7 @@ const CheckOnHold = () => {
 
   const [searchData, setSearchData] = useState({
     sku: "",
+    adminWuserId: "",
     product_name: "",
   });
   const columns = [
@@ -60,26 +61,15 @@ const CheckOnHold = () => {
         setShowError("Please enter a value to search.");
         return;
       }
-      await fetchData(
-        currentPage,
-        rowsPerPage,
-        status,
-        searchData.sku == "" ? null : searchData.sku,
-        searchData.product_name == "" ? null : searchData.sku
-      );
+
+      await fetchData(currentPage, rowsPerPage, status);
       // showSearchBar(false);
     } catch (error) {
       console.log(error);
     }
   };
 
-  const fetchData = async (
-    page = currentPage,
-    limit = rowsPerPage,
-    status,
-    sku = null,
-    product_name = null
-  ) => {
+  const fetchData = async (page = currentPage, limit = rowsPerPage, status) => {
     try {
       // console.log("Page : ", page, "And Limit : ", limit);
       const serverDomain = import.meta.env.VITE_SERVER_DOMAIN;
@@ -88,8 +78,13 @@ const CheckOnHold = () => {
         current: page,
         limit,
         status,
-        sku,
-        product_name,
+        sku: searchData.sku == "" ? null : searchData.sku,
+        adminWuserId:
+          Number(searchData.adminWuserId) == ""
+            ? null
+            : Number(searchData.adminWuserId),
+        product_name:
+          searchData.product_name == "" ? null : searchData.product_name,
       };
       console.log("PayLoad : ", payload);
       const result = await axios.post(
@@ -102,12 +97,8 @@ const CheckOnHold = () => {
         }
       );
       console.log("Result :", result);
-      // console.log("Code : ", result.data.code);
-      // console.log("Total : ", result.data.data.pagination.total);
-      if (result.data.code != 200) {
-        // setData(result.data.data);
 
-        // console.log("Total : ", result.data.data.pagination.total);
+      if (result.data.code != 200) {
         setIsError(true);
         setShowError(result.data.message);
         setCodeStatus("red");
@@ -152,7 +143,6 @@ const CheckOnHold = () => {
       ...prevData,
       [name]: value, // Use the name of the field to update the specific property
     }));
-    console.log("SearchData : ", searchData);
   };
 
   useEffect(() => {
@@ -161,14 +151,15 @@ const CheckOnHold = () => {
       setIsError(false);
       setShowError("");
     }, 5000);
-
+    console.log("SearchData : ", searchData);
     return () => clearTimeout(timer);
-  }, [currentPage, rowsPerPage, status, isError, showError]);
+  }, [currentPage, rowsPerPage, status, isError, showError, searchData]);
 
   const refresh = async () => {
     await fetchData(1, rowsPerPage);
     setSearchData({
       sku: "",
+      adminWuserId: "",
       product_name: "",
     });
     setShowSearch(false);
@@ -230,6 +221,23 @@ const CheckOnHold = () => {
                   placeholder="Product Name"
                 />
               </div>
+              <div className="flex flex-row items-center justify-start mr-5">
+                <select
+                  name="adminWuserId"
+                  value={searchData.adminWuserId}
+                  className="border-b-2 text-start w-28"
+                  onChange={handleChange}
+                >
+                  <option value="" disabled>
+                    Select Users
+                  </option>
+                  <option value="6">Aunng Chan Pyae</option>
+                  <option value="5">Aunng Phyoe Pyae</option>
+                  <option value="2">Kaung Htet Lwin</option>
+                  <option value="7">Pyae KO KO</option>
+                </select>
+              </div>
+
               <button
                 className="rounded-md text-sm w-8 bg-teal-500  text-center text-white font-bold hover:ring-2 hover:ring-teal-300"
                 onClick={() => {

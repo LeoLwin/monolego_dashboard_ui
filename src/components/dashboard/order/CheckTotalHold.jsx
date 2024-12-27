@@ -12,17 +12,39 @@ const CheckTotalHold = () => {
   const [showError, setShowError] = useState("");
   const [isError, setIsError] = useState(false);
   const [data, setData] = useState([]);
-  const [editData, setEditData] = useState(null);
-  const [editAble, setEditAble] = useState(false);
+  const [showSearch, setShowSearch] = useState(false);
   const [searchData, setSearchData] = useState({
     sku: "",
+    adminWuserId: "",
     product_name: "",
   });
   const handleShowProductToggle = () => {
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    setEditData(null);
-    setEditAble(false);
     setShowList(!showList); // Toggle Product visibility
+  };
+
+  const searchButton = async () => {
+    try {
+      const filledFields = Object.values(searchData).filter(
+        (value) => value.trim() !== ""
+      ).length;
+
+      // Validate that only one field is filled
+      if (filledFields > 1) {
+        setShowError("Only one field can be used for searching at a time.");
+        return;
+      }
+
+      if (filledFields === 0) {
+        setShowError("Please enter a value to search.");
+        return;
+      }
+
+      await fetchData(currentPage, rowsPerPage, status);
+      // showSearchBar(false);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const fetchData = async (
@@ -65,6 +87,10 @@ const CheckTotalHold = () => {
     }
   };
 
+  const showSearchBar = (data) => {
+    setShowSearch(data);
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setSearchData((prevData) => ({
@@ -90,6 +116,18 @@ const CheckTotalHold = () => {
 
     return () => clearTimeout(timer);
   }, [currentPage, rowsPerPage, searchData, isError, showError]);
+
+  const refresh = async () => {
+    await fetchData(1, rowsPerPage);
+    setSearchData({
+      sku: "",
+      adminWuserId: "",
+      product_name: "",
+    });
+    setShowSearch(false);
+    setIsError(false);
+    setShowError("");
+  };
 
   return (
     <>
@@ -125,6 +163,78 @@ const CheckTotalHold = () => {
               <CheckOnHold />
             ) : (
               <div className="flex flex-col w-full  items-center rounded-md h-full overflow-x-auto">
+                <div className="flex flex-row mt-10 w-full mb-2 w-auto sm:w-full items-start justify-start  sm:mt-10 md:mt-10 lg:mt-0">
+                  <div
+                    onClick={() => {
+                      showSearchBar(true);
+                    }}
+                    onDoubleClick={() => {
+                      showSearchBar(false);
+                    }}
+                    className="border rounded-full w-8 h-8 hover:ring-2 hover:ring-slate-300 flex items-center justify-center "
+                  >
+                    <i className="fa-solid fa-magnifying-glass"></i>
+                  </div>
+                  <div
+                    className={`${
+                      showSearch ? "flex flex-row" : "hidden"
+                    } flex-row flex-wrap w-full gap-2 p-1  justify-start`}
+                  >
+                    <div className="flex flex-row items-center justify-start">
+                      <input
+                        type="text"
+                        name="sku"
+                        value={searchData.sku}
+                        className="border-b-2 text-center w-24"
+                        onChange={handleChange}
+                        placeholder="SKU"
+                      />
+                    </div>
+                    <div className="flex flex-row items-center justify-start mr-5">
+                      <input
+                        type="text"
+                        name="product_name"
+                        value={searchData.product_name}
+                        className="border-b-2 text-center w-28"
+                        onChange={handleChange}
+                        placeholder="Product Name"
+                      />
+                    </div>
+                    <div className="flex flex-row items-center justify-start mr-5">
+                      <select
+                        name="adminWuserId"
+                        value={searchData.adminWuserId}
+                        className="border-b-2 text-start w-28"
+                        onChange={handleChange}
+                      >
+                        <option value="" disabled>
+                          Select Users
+                        </option>
+                        <option value="6">Aunng Chan Pyae</option>
+                        <option value="5">Aunng Phyoe Pyae</option>
+                        <option value="2">Kaung Htet Lwin</option>
+                        <option value="7">Pyae KO KO</option>
+                      </select>
+                    </div>
+
+                    <button
+                      className="rounded-md text-sm w-8 bg-teal-500  text-center text-white font-bold hover:ring-2 hover:ring-teal-300"
+                      onClick={() => {
+                        searchButton();
+                      }}
+                    >
+                      <i className="fa-solid fa-check"></i>
+                    </button>
+                    <button
+                      className="rounded-md text-sm w-8 bg-teal-500  text-center text-white font-bold hover:ring-2 hover:ring-teal-300"
+                      onClick={() => {
+                        refresh();
+                      }}
+                    >
+                      <i className="fa-solid fa-arrows-rotate"></i>
+                    </button>
+                  </div>
+                </div>
                 <div className="flex flex-row flex-wrap justify-center items-center gap-10 overflow-x-auto">
                   {data.map((item, index) => {
                     return (

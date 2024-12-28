@@ -5,6 +5,7 @@ import ConfirmationModal from "../../models/ConfirmationModal";
 
 /* eslint-disable react/prop-types */
 export const SaleProductDetail = ({ data, onClose, check, order = null }) => {
+  console.log("Is order : ", order);
   const { accessToken, userData } = useAuth();
   const [showError, setShowError] = useState("");
   const [isError, setIsError] = useState(false);
@@ -20,24 +21,27 @@ export const SaleProductDetail = ({ data, onClose, check, order = null }) => {
   // console.log("action :", order);
 
   const action = async (order_status) => {
+    console.log("order Staus : ", order_status);
+    console.log("Order Status === true", order_status == true);
     if (typeof order_status !== "boolean") {
       setShowError("Invalid input: order_status must be a boolean.");
       setIsError(true);
     }
-    // console.log("order_status :",  {
-    //   id: data.id,
-    //   order: order_status,
-    // },);
-    // return;
+
     const serverDomain = import.meta.env.VITE_SERVER_DOMAIN;
     let result;
     if (order) {
       console.log("Order");
+      console.log("PayLoad : ", {
+        id: data.id,
+        order: order_status,
+      });
+
       result = await axios.post(
         `${serverDomain}/lego/order/action`,
         {
           id: data.id,
-          status: order_status,
+          order: order_status,
         },
         {
           headers: {
@@ -46,8 +50,11 @@ export const SaleProductDetail = ({ data, onClose, check, order = null }) => {
         }
       );
     } else {
-      // holdAction
       console.log("Hold");
+      console.log("PayLoad : ", {
+        id: data.id,
+        status: order_status,
+      });
       result = await axios.post(
         `${serverDomain}/lego/order/holdAction`,
         {

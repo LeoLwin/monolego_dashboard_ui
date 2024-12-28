@@ -153,7 +153,7 @@ const CheckOnHold = () => {
     }, 5000);
     console.log("SearchData : ", searchData);
     return () => clearTimeout(timer);
-  }, [currentPage, rowsPerPage, status, isError, showError, searchData, data]);
+  }, [currentPage, rowsPerPage, status, isError, showError, searchData]);
 
   const refresh = async () => {
     await fetchData(1, rowsPerPage);
@@ -265,11 +265,7 @@ const CheckOnHold = () => {
               setShowModal(false);
             }}
           />
-          <div className="flex justify-center items-center p-5">
-            <h3 className="text-xl sm:text-3xl md:text-2xl font-extrabold tracking-wide">
-              HOLD LIST
-            </h3>
-          </div>
+         
           {showDetails && detailsData && (
             <SaleProductDetail
               data={detailsData}

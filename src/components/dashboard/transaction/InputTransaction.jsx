@@ -228,7 +228,7 @@ const InputTransaction = ({ data, editAble }) => {
             aria-describedby="product-name-description"
           />
         </div>
-        <div className="flex flex-col gap-1">
+        <div className="flex flex-col gap-1 ">
           <label
             htmlFor="transaction_type"
             className="text-sm sm:text-base underline decoration-solid capitalize font-bold px-2"

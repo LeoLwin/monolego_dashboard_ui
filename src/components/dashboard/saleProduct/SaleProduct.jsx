@@ -206,7 +206,7 @@ const SaleProduct = () => {
   }, [currentPage, rowsPerPage, isError, searchData]);
   return (
     <>
-      {data.length > 0 ? (
+      {/* {data.length > 0 ? ( */}
         <div className="flex flex-col items-center h-full shrink">
           <h3 className="text-xl sm:text-3xl md:text2xl font-extrabold shrink tracking-wide">
             {showAdd ? "ADD SALEABLE PRODUCT" : "SALEABLE PRODUCT LIST"}
@@ -316,7 +316,7 @@ const SaleProduct = () => {
             />
           )}
         </div>
-      ) : (
+      {/* ) : (
         <div className="flex flex-col justify-center items-center space-y-4 p-6 bg-gray-100 border h-full rounded-lg shadow-md">
           <p className="text-lg font-semibold text-gray-800">
             No Available Products
@@ -326,7 +326,7 @@ const SaleProduct = () => {
             at the moment. Please check back later.
           </p>
         </div>
-      )}
+      )} */}
     </>
   );
 };

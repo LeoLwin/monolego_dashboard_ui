@@ -123,7 +123,7 @@ const Product = () => {
 
   return (
     <>
-      {data.length > 0 ? (
+    
         <div className="flex flex-col items-center h-full shrink">
           <h3 className="text-xl sm:text-3xl md:text2xl font-extrabold shrink tracking-wide">
             {showAdd ? "ADD PRODUCT" : "PRODUCT LIST"}
@@ -143,6 +143,7 @@ const Product = () => {
               </div>
             </div>
           </div>
+          {/* {data.length > 0 ? ( */}
           <div className="flex justify-center items-center">
             <p
               className={`${
@@ -170,9 +171,9 @@ const Product = () => {
               onActionClick={onActionClick} // Notify parent on page change
             />
           )}
-        </div>
-      ) : (
-        <div className="flex flex-col justify-center items-center space-y-4 p-6 bg-gray-100 border h-full rounded-lg shadow-md">
+
+{/* ) : ( */}
+        {/* <div className="flex flex-col justify-center items-center space-y-4 p-6 bg-gray-100 border h-full rounded-lg shadow-md">
           <p className="text-lg font-semibold text-gray-800">
             No Available Products
           </p>
@@ -180,8 +181,10 @@ const Product = () => {
             We&lsquo;re sorry, but it looks like there are no products available
             at the moment. Please check back later.
           </p>
+        </div> */}
+      {/* )} */}
         </div>
-      )}
+     
     </>
   );
 };

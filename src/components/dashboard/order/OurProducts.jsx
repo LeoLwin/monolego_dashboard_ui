@@ -335,13 +335,13 @@ const OurProducts = () => {
                     <img
                       src={item.img_1}
                       alt={item.product_name}
-                      className="w-full h-full object-cover border-2 border-slate-200 rounded-md transition-opacity duration-300 group-hover:opacity-0"
+                      className="w-80 h-80 object-cover border-2 border-slate-200 rounded-md transition-opacity duration-300 group-hover:opacity-0 object-cover"
                       // className="object-cover w-full h-full rounded-md"
                     />
                     <img
                       src={item.img_2}
                       alt={item.product_name}
-                      className="absolute inset-0 w-full h-full object-cover border-2 border-slate-200 rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                      className="absolute inset-0 w-full h-full object-cover border-2 border-slate-200 rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-300 object-fill"
                     />
                   </div>
                   <div className="relative flex flex-col w-full items-start gap-1 p-1">

@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import CheckOnHold from "./CheckOnHold";
 import { useAuth } from "../../../AuthContext";
+import { SaleProductDetail } from "./SaleProductDetail";
 import axios from "axios";
+import Order from "./Order";
 
 const CheckTotalHold = () => {
   const { accessToken } = useAuth();
@@ -11,8 +13,14 @@ const CheckTotalHold = () => {
   const [totalPages, setTotalPages] = useState(1); // Total pages
   const [showError, setShowError] = useState("");
   const [isError, setIsError] = useState(false);
+  const [detailsData, setDetailsData] = useState(null);
+  const [showDetails, setShowDetails] = useState(false);
+  const [showOrder, setShowOrder] = useState(false);
+  const [order, setOrder] = useState(true);
+  const [header, setHeader] = useState("");
   const [data, setData] = useState([]);
   const [showSearch, setShowSearch] = useState(false);
+
   const [searchData, setSearchData] = useState({
     sku: "",
     adminWuserId: "",
@@ -105,6 +113,25 @@ const CheckTotalHold = () => {
     }
   };
 
+  const closeDetails = () => {
+    setShowDetails(false);
+  };
+
+  const openDetails = (item) => {
+    setDetailsData(item);
+    setShowDetails(true);
+  };
+
+  const closeOrder = () => {
+    setShowOrder(false);
+  };
+
+  const openOrder = (item, order) => {
+    setDetailsData(item);
+    setOrder(order);
+    setShowOrder(true);
+  };
+
   useEffect(() => {
     console.log(searchData);
     fetchData(currentPage, rowsPerPage);
@@ -136,9 +163,28 @@ const CheckTotalHold = () => {
           {/* Header Section */}
           {/* <div className="flex flex-col sm:flex-row w-full mb-5"> */}
           {/* First Div: 4/5 Width */}
+
+          {showOrder && detailsData && (
+            <Order
+              data={detailsData}
+              onClose={closeOrder}
+              order={order}
+              head={header}
+              promotion={false}
+            />
+          )}
+
+          {showDetails && detailsData && (
+            <SaleProductDetail
+              data={detailsData}
+              onClose={closeDetails}
+              check={false}
+            />
+          )}
+
           <div className="w-full  flex justify-center sm:justify-center items-end mb-4 sm:mb-0">
             <h3 className="text-xl sm:text-3xl md:text-2xl font-extrabold shrink tracking-wide">
-              {showList ? "Hold List" : "HOLD TRANSACTION"}
+              {showList ? "HOLD TRANSACTION" : "Hold List"}
             </h3>
           </div>
           {/* Second Div: 1/5 Width */}
@@ -257,6 +303,9 @@ const CheckTotalHold = () => {
                           />
                         </div>
                         <div className="relative flex flex-col w-full items-start gap-1 p-1">
+                          <p className="text-basic font-mono font-extrabold">
+                            ID : {item.sp_id}
+                          </p>
                           <h3 className="text-2xl font-mono font-extrabold">
                             {item.product_name}
                           </h3>
@@ -285,8 +334,8 @@ const CheckTotalHold = () => {
                             <button
                               className="border-2 border-blue-500 rounded-md text-sm w-16 text-center text-blue-500 font-bold hover:ring-2 hover:ring-blue-300"
                               onClick={() => {
-                                // setHeader("ORDER");
-                                // openOrder(item, true);
+                                setHeader("RETURN HOLD");
+                                openOrder(item, false);
                               }}
                             >
                               RETURN
@@ -296,15 +345,15 @@ const CheckTotalHold = () => {
                             <button
                               className="border-2 border-orange-500 rounded-md text-sm w-16 text-center text-orange-500 font-bold hover:ring-2 hover:ring-orange-300"
                               onClick={() => {
-                                // setHeader("HOLD");
-                                // openOrder(item, false);
+                                setHeader("HOLD");
+                                openOrder(item, false);
                               }}
                             >
                               HOLD
                             </button>
                             <button
                               className="rounded-md text-sm w-8 bg-teal-500  text-center text-white font-bold hover:ring-2 hover:ring-teal-300"
-                              // onClick={() => openDetails(item)}
+                              onClick={() => openDetails(item)}
                             >
                               <i className="fa-solid fa-info"></i>
                             </button>

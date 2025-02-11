@@ -6,7 +6,7 @@ import { useAuth } from "../../../AuthContext";
 import ConfirmationModal from "../../models/ConfirmationModal";
 
 /* eslint-disable react/prop-types */
-const Order = ({ data, onClose, order, head }) => {
+const Order = ({ data, onClose, order, head, promotion }) => {
   const { accessToken, userData } = useAuth();
   const [showError, setShowError] = useState("");
   const [code, setCode] = useState("");
@@ -197,23 +197,25 @@ const Order = ({ data, onClose, order, head }) => {
                   readOnly
                 />
               </div>
-              <div className="flex flex-col gap-1">
-                <label
-                  htmlFor="price"
-                  className="text-sm decoration-solid capitalize font-bold px-1"
-                >
-                  Price
-                </label>
-                <input
-                  type="text"
-                  name="price"
-                  value={data.price}
-                  // onChange={handleChange}
-                  className="border-2 border-slate-500 rounded-lg p-1 text-sm sm:text-base placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                  // placeholder="Enter the sku"
-                  readOnly
-                />
-              </div>
+              {promotion && (
+                <div className="flex flex-col gap-1">
+                  <label
+                    htmlFor="price"
+                    className="text-sm decoration-solid capitalize font-bold px-1"
+                  >
+                    Price
+                  </label>
+                  <input
+                    type="text"
+                    name="price"
+                    value={data.price}
+                    // onChange={handleChange}
+                    className="border-2 border-slate-500 rounded-lg p-1 text-sm sm:text-base placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    // placeholder="Enter the sku"
+                    readOnly
+                  />
+                </div>
+              )}
               <div className="flex flex-col gap-1">
                 <label
                   htmlFor="promoPercentage"
@@ -230,22 +232,25 @@ const Order = ({ data, onClose, order, head }) => {
                   // placeholder="Enter the sku"
                 />
               </div>
-              <div className="flex flex-col gap-1">
-                <label
-                  htmlFor="promoPercentage"
-                  className="text-sm decoration-solid capitalize font-bold px-1"
-                >
-                  Promo-Percentage
-                </label>
-                <input
-                  type="number"
-                  name="promoPercentage"
-                  value={orderData.promoPercentage}
-                  onChange={handleChange}
-                  className="border-2 border-slate-500 rounded-lg p-1 text-sm sm:text-base placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                  // placeholder="Enter the sku"
-                />
-              </div>
+
+              {promotion && (
+                <div className="flex flex-col gap-1">
+                  <label
+                    htmlFor="promoPercentage"
+                    className="text-sm decoration-solid capitalize font-bold px-1"
+                  >
+                    Promo-Percentage
+                  </label>
+                  <input
+                    type="number"
+                    name="promoPercentage"
+                    value={orderData.promoPercentage}
+                    onChange={handleChange}
+                    className="border-2 border-slate-500 rounded-lg p-1 text-sm sm:text-base placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    // placeholder="Enter the sku"
+                  />
+                </div>
+              )}
 
               <div className="flex justify-center items-center p-2">
                 <p

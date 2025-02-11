@@ -33,7 +33,7 @@ export const SaleProductDetail = ({ data, onClose, check, order = null }) => {
     if (order) {
       console.log("Order");
       console.log("PayLoad : ", {
-        id: data.id,
+        id: data.id || data.sp_id,
         order: order_status,
       });
 
@@ -115,7 +115,7 @@ export const SaleProductDetail = ({ data, onClose, check, order = null }) => {
               <label htmlFor="id" className="shrink-0 text-base font-medium">
                 ID :
               </label>
-              <p className="ml-5">{data.id}</p>
+              <p className="ml-5">{data.id || data.sp_id}</p>
             </div>
             <div className="flex flex-row flex-wrap border-2 border-slate-500 rounded-md p-1 shrink-0 overflow-hidden max-w-full">
               <label htmlFor="id" className="shrink-0 text-base font-medium">

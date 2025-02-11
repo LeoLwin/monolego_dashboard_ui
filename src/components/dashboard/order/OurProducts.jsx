@@ -232,7 +232,8 @@ const OurProducts = () => {
               data={detailsData}
               onClose={closeOrder}
               order={order}
-              head={header}
+              head={header} 
+              promotion={true}            
             />
           )}
 

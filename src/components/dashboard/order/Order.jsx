@@ -6,7 +6,7 @@ import { useAuth } from "../../../AuthContext";
 import ConfirmationModal from "../../models/ConfirmationModal";
 
 /* eslint-disable react/prop-types */
-const Order = ({ data, onClose, order, head, promotion }) => {
+const Order = ({ data, onClose, order, head, promotion, isReturn }) => {
   const { accessToken, userData } = useAuth();
   const [showError, setShowError] = useState("");
   const [code, setCode] = useState("");
@@ -41,10 +41,50 @@ const Order = ({ data, onClose, order, head, promotion }) => {
       const serverDomain = import.meta.env.VITE_SERVER_DOMAIN;
       let result;
 
+      if (isReturn) {
+        console.log("data : ",data);
+        console.log("IsReturn : ", isReturn);
+        console.log("PayLoad : ", {
+          spId: data.sp_id,
+          qty: orderData.qty,
+        },)
+        // return
+        // order/holdReturn
+        result = await axios.post(
+          `${serverDomain}/lego/order/holdReturn`,
+          {
+            id: data.sp_id,
+            qty: orderData.qty,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
+        console.log("Result :", result.data);
+        console.log("Result :", result.data.code);
+        if (result.data.code == "200") {
+          setCode("green");
+          setShowError(result.data.message);
+          setOrderData({
+            qty: "",
+            order: order,
+            promoPercentage: 0,
+          });
+        } else {
+          setCode("red");
+          setShowError(result.data.message);
+        }
+        setShowError(result.data.message);
+        return;
+      }
+      // return
+
       result = await axios.post(
         `${serverDomain}/lego/order/order`,
         {
-          id: data.id,
+          id: data.id || data.sp_id,
           qty: orderData.qty,
           order: order,
           promoPercentage: orderData.promoPercentage,
@@ -59,7 +99,9 @@ const Order = ({ data, onClose, order, head, promotion }) => {
       console.log("Result :", result.data.code);
       if (result.data.code == "200") {
         setCode("green");
-        downloadAsImage();
+        if (order) {
+          downloadAsImage();
+        }
         setShowError(result.data.message);
         setOrderData({
           qty: "",
@@ -79,6 +121,7 @@ const Order = ({ data, onClose, order, head, promotion }) => {
   };
 
   const downloadAsImage = () => {
+    console.log("DownloadAsImage");
     const element = document.getElementById("voucher-div");
     html2canvas(element).then((canvas) => {
       const image = canvas.toDataURL("image/png");

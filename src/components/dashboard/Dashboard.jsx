@@ -6,7 +6,6 @@ import Transaction from "./transaction/Transaction";
 import SaleProduct from "./saleProduct/SaleProduct";
 import OurProducts from "./order/OurProducts";
 import CheckOrders from "./order/CheckOrders";
-import CheckOnHold from "./order/CheckOnHold";
 import CheckTotalHold from "./order/CheckTotalHold";
 
 const Dashboard = () => {

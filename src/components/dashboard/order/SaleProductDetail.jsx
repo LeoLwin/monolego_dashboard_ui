@@ -21,8 +21,8 @@ export const SaleProductDetail = ({ data, onClose, check, order = null }) => {
   // console.log("action :", order);
 
   const action = async (order_status) => {
-    console.log("order Staus : ", order_status);
-    console.log("Order Status === true", order_status == true);
+    // console.log("order Staus : ", order_status);
+    // console.log("Order Status === true", order_status == true);
     if (typeof order_status !== "boolean") {
       setShowError("Invalid input: order_status must be a boolean.");
       setIsError(true);

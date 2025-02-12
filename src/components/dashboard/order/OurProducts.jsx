@@ -233,7 +233,8 @@ const OurProducts = () => {
               onClose={closeOrder}
               order={order}
               head={header} 
-              promotion={true}            
+              promotion={true} 
+              isReturn={false}          
             />
           )}
 

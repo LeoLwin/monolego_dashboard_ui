@@ -20,6 +20,7 @@ const CheckTotalHold = () => {
   const [header, setHeader] = useState("");
   const [data, setData] = useState([]);
   const [showSearch, setShowSearch] = useState(false);
+  const [isReturn, setIsReturn]= useState(false)
 
   const [searchData, setSearchData] = useState({
     sku: "",
@@ -171,6 +172,7 @@ const CheckTotalHold = () => {
               order={order}
               head={header}
               promotion={false}
+              isReturn={isReturn}
             />
           )}
 
@@ -335,6 +337,7 @@ const CheckTotalHold = () => {
                               className="border-2 border-blue-500 rounded-md text-sm w-16 text-center text-blue-500 font-bold hover:ring-2 hover:ring-blue-300"
                               onClick={() => {
                                 setHeader("RETURN HOLD");
+                                setIsReturn(true)
                                 openOrder(item, false);
                               }}
                             >
@@ -346,6 +349,7 @@ const CheckTotalHold = () => {
                               className="border-2 border-orange-500 rounded-md text-sm w-16 text-center text-orange-500 font-bold hover:ring-2 hover:ring-orange-300"
                               onClick={() => {
                                 setHeader("HOLD");
+                                setIsReturn(false)
                                 openOrder(item, false);
                               }}
                             >

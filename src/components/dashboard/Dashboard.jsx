@@ -7,6 +7,8 @@ import SaleProduct from "./saleProduct/SaleProduct";
 import OurProducts from "./order/OurProducts";
 import CheckOrders from "./order/CheckOrders";
 import CheckTotalHold from "./order/CheckTotalHold";
+import UserLists from "./users/UserLists";
+import PasswordChange from "./users/PasswordChange";
 
 const Dashboard = () => {
   const [isSidebarVisible, setIsSidebarVisible] = useState(false);
@@ -87,8 +89,8 @@ const Dashboard = () => {
             {show === 4 && <OurProducts />}
             {show === 5 && <CheckOrders />}
             {show === 6 && <CheckTotalHold />}
-            {/* {show === 6 && <CheckOnHold />} */}
-            {/* CheckTotalHold */}
+            {show === 7 && <UserLists />}
+            {show === 8 && <PasswordChange />}
           </div>
         </div>
       </div>

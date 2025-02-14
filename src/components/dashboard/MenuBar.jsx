@@ -87,8 +87,8 @@ const Menubar = ({ onMenuClick, onProductClick }) => {
         </div>
 
         {/* users */}
-        {userData.role_name === "admin" ||
-          (userData.role_name === "developer" && (
+        {(userData.role_name === "admin" ||
+          userData.role_name === "developer" )&& (
             <div
               className={`flex flex-row gap-2 text-xl h-10 lg:p-5 ml-2 border-2 rounded border-black items-center shrink lg:justify-start justify-center 
             transition-all duration-300 ease-in-out hover:bg-blue-400 hover:text-white hover:scale-105 hover:border-0 ${
@@ -109,11 +109,11 @@ const Menubar = ({ onMenuClick, onProductClick }) => {
                 Users
               </span>
             </div>
-          ))}
+          )}
 
         {/* Product Menu */}
-        {userData.role_name === "admin" ||
-          (userData.role_name === "developer" && (
+        {(userData.role_name === "admin" ||
+          userData.role_name === "developer") && (
             <div
               className={`flex flex-row gap-2 text-xl h-10 lg:p-5 ml-2 border-2 rounded border-black items-center shrink lg:justify-start justify-center 
             transition-all duration-300 ease-in-out hover:bg-blue-400 hover:text-white hover:scale-105 hover:border-0 ${
@@ -134,10 +134,10 @@ const Menubar = ({ onMenuClick, onProductClick }) => {
                 Product
               </span>
             </div>
-          ))}
+          )}
         {/* Product Menu */}
-        {userData.role_name === "admin" ||
-          (userData.role_name === "developer" && (
+        {(userData.role_name === "admin" ||
+          userData.role_name === "developer" )&& (
             <div
               className={`flex flex-row gap-2 text-xl h-10 lg:p-5 ml-2 border-2 rounded border-black items-center shrink lg:justify-start justify-center 
             transition-all duration-300 ease-in-out hover:bg-blue-400 hover:text-white hover:scale-105 hover:border-0 ${
@@ -158,10 +158,10 @@ const Menubar = ({ onMenuClick, onProductClick }) => {
                 Transaction
               </span>
             </div>
-          ))}
+          )}
         {/* Saleable Products */}
-        {userData.role_name === "admin" ||
-          (userData.role_name === "developer" && (
+        {(userData.role_name === "admin" ||
+          userData.role_name === "developer") && (
             <div
               className={`flex flex-row gap-2 text-xl h-10 lg:p-5 ml-2 border-2 rounded border-black items-center shrink lg:justify-start justify-center 
             transition-all duration-300 ease-in-out hover:bg-blue-400 hover:text-white hover:scale-105 hover:border-0 ${
@@ -183,7 +183,7 @@ const Menubar = ({ onMenuClick, onProductClick }) => {
                 Saleable Products
               </span>
             </div>
-          ))}
+          )}
 
         <div
           className={`flex flex-row gap-2 text-xl h-10 lg:p-5 ml-2 border-2 rounded border-black items-center shrink lg:justify-start justify-center 

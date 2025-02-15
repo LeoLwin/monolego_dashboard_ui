@@ -21,9 +21,8 @@ const CheckTotalHold = () => {
   const [header, setHeader] = useState("");
   const [data, setData] = useState([]);
   const [showSearch, setShowSearch] = useState(false);
-  const [isReturn, setIsReturn]= useState(false)
-  const  [countData, setCountData]= useState([])
-
+  const [isReturn, setIsReturn] = useState(false);
+  const [countData, setCountData] = useState([]);
 
   const [searchData, setSearchData] = useState({
     sku: "",
@@ -40,7 +39,6 @@ const CheckTotalHold = () => {
   ];
 
   // total_qty_sum
-
 
   const handleShowProductToggle = () => {
     // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -105,7 +103,7 @@ const CheckTotalHold = () => {
         return;
       }
       setData(result.data.data.by);
-      setCountData(result.data.data.totalCountByOnHold)
+      setCountData(result.data.data.totalCountByOnHold);
       console.log(result.data.data.pagination);
       setTotalPages(result.data.data.pagination.rowsPerPage || 1);
     } catch (error) {
@@ -201,24 +199,13 @@ const CheckTotalHold = () => {
             />
           )}
 
+
           <div className="w-full  flex justify-center sm:justify-center items-end mb-4 sm:mb-0">
             <h3 className="text-xl sm:text-3xl md:text-2xl font-extrabold shrink tracking-wide">
               {showList ? "HOLD TRANSACTION" : "Hold List"}
             </h3>
           </div>
 
-          <Table
-          columns={columns}
-          data={countData}
-          rowsPerPage={1}
-          initialPage={currentPage}
-          totalData={currentPage}
-          onPageChange={handlePageChange}
-          Action={{ detail: false, edit: false, delete: false, action: false }}
-          // onActionClick={onActionClick} // Notify parent on page change
-        />
-          
-         
           {/* Second Div: 1/5 Width */}
           <div className="w-full  flex justify-end items-center pr-5 mb-1">
             <div
@@ -226,7 +213,6 @@ const CheckTotalHold = () => {
         transition-all duration-300 ease-out-in hover:bg-blue-400 hover:text-white hover:scale-105 hover:border-0"
               onClick={handleShowProductToggle}
             >
-
               {showList ? (
                 <i className="fa-solid fa-arrow-left"></i>
               ) : (
@@ -314,7 +300,22 @@ const CheckTotalHold = () => {
                     </button>
                   </div>
                 </div>
-                <div className="flex flex-row flex-wrap justify-center items-center gap-10 overflow-x-auto">
+                <Table
+            columns={columns}
+            data={countData}
+            rowsPerPage={1}
+            initialPage={currentPage}
+            totalData={currentPage}
+            onPageChange={handlePageChange}
+            Action={{
+              detail: false,
+              edit: false,
+              delete: false,
+              action: false,
+            }}
+            // onActionClick={onActionClick} // Notify parent on page change
+          />
+                <div className="flex flex-row flex-wrap justify-center items-center gap-10 overflow-x-auto mt-2">
                   {data.map((item, index) => {
                     return (
                       <div
@@ -368,7 +369,7 @@ const CheckTotalHold = () => {
                               className="border-2 border-blue-500 rounded-md text-sm w-16 text-center text-blue-500 font-bold hover:ring-2 hover:ring-blue-300"
                               onClick={() => {
                                 setHeader("RETURN HOLD");
-                                setIsReturn(true)
+                                setIsReturn(true);
                                 openOrder(item, false);
                               }}
                             >
@@ -380,7 +381,7 @@ const CheckTotalHold = () => {
                               className="border-2 border-orange-500 rounded-md text-sm w-16 text-center text-orange-500 font-bold hover:ring-2 hover:ring-orange-300"
                               onClick={() => {
                                 setHeader("HOLD");
-                                setIsReturn(false)
+                                setIsReturn(false);
                                 openOrder(item, false);
                               }}
                             >

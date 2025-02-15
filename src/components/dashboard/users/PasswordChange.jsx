@@ -1,7 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useAuth } from "../../../AuthContext";
-import { data } from "autoprefixer";
 
 const PasswordChange = () => {
   const { accessToken } = useAuth();

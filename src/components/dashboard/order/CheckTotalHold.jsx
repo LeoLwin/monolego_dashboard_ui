@@ -4,6 +4,7 @@ import { useAuth } from "../../../AuthContext";
 import { SaleProductDetail } from "./SaleProductDetail";
 import axios from "axios";
 import Order from "./Order";
+import Table from "../../../Table";
 
 const CheckTotalHold = () => {
   const { accessToken } = useAuth();
@@ -21,12 +22,26 @@ const CheckTotalHold = () => {
   const [data, setData] = useState([]);
   const [showSearch, setShowSearch] = useState(false);
   const [isReturn, setIsReturn]= useState(false)
+  const  [countData, setCountData]= useState([])
+
 
   const [searchData, setSearchData] = useState({
     sku: "",
     adminWuserId: "",
     product_name: "",
   });
+
+  const columns = [
+    // { Header: "ID", accessor: "id" },
+    // { Header: "SKU", accessor: "sku" },
+    // { Header: "Hold", accessor: "holdby" },
+    { Header: "Name", accessor: "username" },
+    { Header: "Total", accessor: "total_qty_sum" },
+  ];
+
+  // total_qty_sum
+
+
   const handleShowProductToggle = () => {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     setShowList(!showList); // Toggle Product visibility
@@ -81,7 +96,8 @@ const CheckTotalHold = () => {
           },
         }
       );
-      console.log("Result :", result.data);
+      console.log("Result :", result.data.data);
+      console.log("ONhold :", result.data.data.totalCountByOnHold);
       if (result.data.code != 200) {
         setData([]);
         setIsError(true);
@@ -89,6 +105,7 @@ const CheckTotalHold = () => {
         return;
       }
       setData(result.data.data.by);
+      setCountData(result.data.data.totalCountByOnHold)
       console.log(result.data.data.pagination);
       setTotalPages(result.data.data.pagination.rowsPerPage || 1);
     } catch (error) {
@@ -189,6 +206,19 @@ const CheckTotalHold = () => {
               {showList ? "HOLD TRANSACTION" : "Hold List"}
             </h3>
           </div>
+
+          <Table
+          columns={columns}
+          data={countData}
+          rowsPerPage={1}
+          initialPage={currentPage}
+          totalData={currentPage}
+          onPageChange={handlePageChange}
+          Action={{ detail: false, edit: false, delete: false, action: false }}
+          // onActionClick={onActionClick} // Notify parent on page change
+        />
+          
+         
           {/* Second Div: 1/5 Width */}
           <div className="w-full  flex justify-end items-center pr-5 mb-1">
             <div
@@ -196,6 +226,7 @@ const CheckTotalHold = () => {
         transition-all duration-300 ease-out-in hover:bg-blue-400 hover:text-white hover:scale-105 hover:border-0"
               onClick={handleShowProductToggle}
             >
+
               {showList ? (
                 <i className="fa-solid fa-arrow-left"></i>
               ) : (

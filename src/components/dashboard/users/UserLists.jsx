@@ -5,6 +5,7 @@ import Table from "../../../Table";
 
 const UserLists = () => {
   const { accessToken } = useAuth();
+  // eslint-disable-next-line no-unused-vars
   const [currentPage, setCurrentPage] = useState(1);
   const [data, setData] = useState([]); // Current page
 
